@@ -3,4 +3,61 @@
 #+DATE: January 31, 2021
 #+OPTIONS: ':true *:true toc:nil num:nil ^:nil
 
-* Contexts
+* Initial Schema Design
+| CONTEXT   | SCHEMA               | TABLE                  | FIELDS                                                                                   |
+|-----------+----------------------+------------------------+------------------------------------------------------------------------------------------|
+| Auth      | Users                | users                  | name:unique                                                                              |
+|-----------+----------------------+------------------------+------------------------------------------------------------------------------------------|
+| Groups    | Group                | groups                 | name:unique                                                                              |
+| Groups    | GroupMember          | group_members          | group_id, user_id, admin                                                                 |
+|-----------+----------------------+------------------------+------------------------------------------------------------------------------------------|
+| Exchanges | Exchange             | exchanges              | group_id, name                                                                           |
+| Exchanges | Participant          | participants           | exchange_id, user_id, has_participant_id, participating                                  |
+| Exchanges | Gift                 | gifts                  | exchange_id, to_participant_id, from_participant_id, name, description, upload_url, etc. |
+| Exchanges | ExchangeResult       | exchange_results       | exchange_id, who_participant_id, has_participant_id                                      |
+| Exchanges | ParticipantExclusion | participant_exclusions | participant_id, exclude_participant_id                                                   |
+|           |                      |                        |                                                                                          |
+
+
+** Phoenix generators
+#+BEGIN_SRC text
+# users
+mix phx.gen.html Auth User users name:string:unique
+
+# groups
+mix phx.gen.html Groups Group groups name:string:unique
+
+# group_members
+mix phx.gen.context Groups GroupMember group_members \
+  group_id:references:groups user_id:references:users admin:boolean
+
+# exchanges
+mix phx.gen.html Exchanges Exchange exchanges group_id:references:groups name:string
+
+# participants
+mix phx.gen.context Exchanges Participant participants \
+  exchange_id:references:exchanges user_id:references:users participating:boolean
+
+# gifts
+mix phx.gen.context Exchanges Gift gifts \
+  exchange_id:references:exchanges \
+  to_participant_id:references:participants \
+  from_participant_id:references:participants \
+  description:string
+
+# exchange_results
+mix phx.gen.html Exchanges ExchangeResult exchange_results \
+  group_id:references:groups \
+  who_participant_id:references:participants \
+  has_participant_id:references:participants
+
+# participant_exclusions
+mix phx.gen.context Exchanges ParticipantExclusion participant_exclusions \
+  participant_id:references:participants \
+  exclude_participant_id:references:participants
+#+END_SRC
+
+** Run migrations
+#+BEGIN_SRC text
+mix ecto.migrate
+#+END_SRC
