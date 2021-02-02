@@ -1,0 +1,6 @@
+#+TITLE: Giftopotamus!
+#+AUTHOR: Adam Schwartz
+#+DATE: January 31, 2021
+#+OPTIONS: ':true *:true toc:nil num:nil ^:nil
+
+* Contexts
