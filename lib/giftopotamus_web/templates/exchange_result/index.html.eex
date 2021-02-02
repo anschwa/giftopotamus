@@ -1,0 +1,24 @@
+<h1>Listing Exchange results</h1>
+
+<table>
+  <thead>
+    <tr>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for exchange_result <- @exchange_results do %>
+    <tr>
+
+      <td>
+        <span><%= link "Show", to: Routes.exchange_result_path(@conn, :show, exchange_result) %></span>
+        <span><%= link "Edit", to: Routes.exchange_result_path(@conn, :edit, exchange_result) %></span>
+        <span><%= link "Delete", to: Routes.exchange_result_path(@conn, :delete, exchange_result), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Exchange result", to: Routes.exchange_result_path(@conn, :new) %></span>
