@@ -1,8 +1,0 @@
-<h1>Show Exchange result</h1>
-
-<ul>
-
-</ul>
-
-<span><%= link "Edit", to: Routes.exchange_result_path(@conn, :edit, @exchange_result) %></span>
-<span><%= link "Back", to: Routes.exchange_result_path(@conn, :index) %></span>

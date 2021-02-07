@@ -12,7 +12,10 @@ module.exports = {
     extend: {},
   },
   variants: {
-    extend: {},
+    extend: {
+      backgroundColor: ['active'],
+      boxShadow: ['active'],
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

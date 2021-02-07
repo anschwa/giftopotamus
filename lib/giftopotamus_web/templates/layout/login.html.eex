@@ -1,0 +1,12 @@
+<body style="background-color: #e3e6ff;">
+  <header class="text-center mt-8">
+    <h1 class="text-6xl font-light text-purple-700">Giftopotamus!</h1>
+  </header>
+
+  <main role="main" class="bg-white max-w-sm mx-auto mt-16 mb-4 p-4 shadow-md rounded-md border-t">
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
+    <%= @inner_content %>
+  </main>
+</body>

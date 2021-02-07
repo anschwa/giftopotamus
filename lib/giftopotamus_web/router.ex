@@ -9,20 +9,40 @@ defmodule GiftopotamusWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
+  pipeline :login_layout do
+    plug :put_root_layout, {GiftopotamusWeb.LayoutView, "login.html"}
+  end
+
+  pipeline :main_layout do
+    plug :put_root_layout, {GiftopotamusWeb.LayoutView, "main.html"}
   end
 
   scope "/", GiftopotamusWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_auth, :main_layout]
 
     get "/", PageController, :index
+    resources "/groups", GroupController
+    resources "/exchanges", ExchangeController
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", GiftopotamusWeb do
-  #   pipe_through :api
-  # end
+  scope "/", GiftopotamusWeb do
+    pipe_through [:browser, :login_layout]
+
+    resources "/users", UserController, only: [:new, :create]
+    resources "/sessions", SessionController, only: [:new, :create, :delete], singleton: true
+  end
+
+  defp require_auth(conn, _opts) do
+    case get_session(conn, :user_id) do
+      nil ->
+        conn
+        |> Phoenix.Controller.redirect(to: "/sessions/new")
+        |> halt()
+      user_id ->
+        assign(conn, :current_user, Giftopotamus.Auth.get_user!(user_id))
+    end
+  end
+
 
   # Enables LiveDashboard only for development
   #

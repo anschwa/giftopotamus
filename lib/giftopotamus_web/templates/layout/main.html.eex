@@ -1,0 +1,20 @@
+<body class="p-4 pt-0">
+  <header>
+    <section class="p-2">
+      <div class="text-5xl font-semibold text-purple-600">
+        <%= link "Giftopotamus!", to: Routes.page_path(@conn, :index) %>
+      </div>
+    </section>
+
+    <%= if @conn.assigns[:current_user] do %>
+      <%= render("nav.html", assigns) %>
+    <% end %>
+  </header>
+
+  <main role="main">
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
+    <%= @inner_content %>
+  </main>
+</body>

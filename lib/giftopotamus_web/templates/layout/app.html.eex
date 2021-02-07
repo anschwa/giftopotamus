@@ -9,28 +9,5 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
-  <body>
-    <header>
-      <section class="p-2">
-        <div class="text-5xl font-semibold text-purple-600">
-          <%= link "Giftopotamus!", to: Routes.page_path(@conn, :index) %>
-        </div>
-
-        <nav role="navigation" class="p-2">
-          <ul>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home),
-                  class: "underline hover:bg-purple-600 hover:text-white" %></li>
-            <% end %>
-          </ul>
-        </nav>
-      </section>
-    </header>
-
-    <main role="main">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= @inner_content %>
-    </main>
-  </body>
+  <%= @inner_content %>
 </html>

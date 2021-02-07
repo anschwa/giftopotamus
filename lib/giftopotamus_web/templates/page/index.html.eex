@@ -1,7 +1,1 @@
-<section class="flex justify-center bg-green-200 m-4 p-4 rounded shadow-md">
-  <label class="mx-2">
-    <span class="text-gray-700 font-medium">Team Name</span>
-    <input class="mx-2" type="text" placeholder="example" />
-  </label>
-  <button class="btn mx-2">Submit</button>
-</section>
+<div class="mx-4 alert alert-warning">Nothing to see here.</div>

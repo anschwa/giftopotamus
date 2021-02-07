@@ -46,7 +46,7 @@ mix phx.gen.context Exchanges Gift gifts \
   description:string
 
 # exchange_results
-mix phx.gen.html Exchanges ExchangeResult exchange_results \
+mix phx.gen.context Exchanges ExchangeResult exchange_results \
   group_id:references:groups \
   who_participant_id:references:participants \
   has_participant_id:references:participants
