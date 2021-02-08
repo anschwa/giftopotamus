@@ -75,6 +75,7 @@ defmodule GiftopotamusWeb.ExchangeControllerTest do
     test "deletes chosen exchange", %{conn: conn, exchange: exchange} do
       conn = delete(conn, Routes.exchange_path(conn, :delete, exchange))
       assert redirected_to(conn) == Routes.exchange_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.exchange_path(conn, :show, exchange))
       end

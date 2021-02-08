@@ -1,16 +1,10 @@
-<nav role="navigation" class="p-2">
-  <ul class="block">
+<nav role="navigation" class="py-2">
+  <ul>
     <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-      <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
+      <li class="inline-block mr-2"><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
     <% end %>
 
-    <li><%= link "Groups", to: Routes.group_path(@conn, :index) %></li>
-    <li><%= link "Exchanges", to: Routes.exchange_path(@conn, :index) %></li>
+    <li class="inline-block"><%= link "Groups", to: Routes.group_path(@conn, :index) %></li>
+    <li class="inline-block ml-2"><%= link "Exchanges", to: Routes.exchange_path(@conn, :index) %></li>
   </ul>
-
-  <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
-    <div class="block">
-      <%= submit "Logout", class: "link" %>
-    </div>
-  <% end %>
 </nav>

@@ -38,11 +38,11 @@ defmodule GiftopotamusWeb.Router do
         conn
         |> Phoenix.Controller.redirect(to: "/sessions/new")
         |> halt()
+
       user_id ->
         assign(conn, :current_user, Giftopotamus.Auth.get_user!(user_id))
     end
   end
-
 
   # Enables LiveDashboard only for development
   #

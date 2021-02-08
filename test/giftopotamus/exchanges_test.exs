@@ -99,13 +99,19 @@ defmodule Giftopotamus.ExchangesTest do
 
     test "update_participant/2 with valid data updates the participant" do
       participant = participant_fixture()
-      assert {:ok, %Participant{} = participant} = Exchanges.update_participant(participant, @update_attrs)
+
+      assert {:ok, %Participant{} = participant} =
+               Exchanges.update_participant(participant, @update_attrs)
+
       assert participant.participating == false
     end
 
     test "update_participant/2 with invalid data returns error changeset" do
       participant = participant_fixture()
-      assert {:error, %Ecto.Changeset{}} = Exchanges.update_participant(participant, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Exchanges.update_participant(participant, @invalid_attrs)
+
       assert participant == Exchanges.get_participant!(participant.id)
     end
 
@@ -207,7 +213,8 @@ defmodule Giftopotamus.ExchangesTest do
     end
 
     test "create_exchange_result/1 with valid data creates a exchange_result" do
-      assert {:ok, %ExchangeResult{} = exchange_result} = Exchanges.create_exchange_result(@valid_attrs)
+      assert {:ok, %ExchangeResult{} = exchange_result} =
+               Exchanges.create_exchange_result(@valid_attrs)
     end
 
     test "create_exchange_result/1 with invalid data returns error changeset" do
@@ -216,19 +223,27 @@ defmodule Giftopotamus.ExchangesTest do
 
     test "update_exchange_result/2 with valid data updates the exchange_result" do
       exchange_result = exchange_result_fixture()
-      assert {:ok, %ExchangeResult{} = exchange_result} = Exchanges.update_exchange_result(exchange_result, @update_attrs)
+
+      assert {:ok, %ExchangeResult{} = exchange_result} =
+               Exchanges.update_exchange_result(exchange_result, @update_attrs)
     end
 
     test "update_exchange_result/2 with invalid data returns error changeset" do
       exchange_result = exchange_result_fixture()
-      assert {:error, %Ecto.Changeset{}} = Exchanges.update_exchange_result(exchange_result, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Exchanges.update_exchange_result(exchange_result, @invalid_attrs)
+
       assert exchange_result == Exchanges.get_exchange_result!(exchange_result.id)
     end
 
     test "delete_exchange_result/1 deletes the exchange_result" do
       exchange_result = exchange_result_fixture()
       assert {:ok, %ExchangeResult{}} = Exchanges.delete_exchange_result(exchange_result)
-      assert_raise Ecto.NoResultsError, fn -> Exchanges.get_exchange_result!(exchange_result.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Exchanges.get_exchange_result!(exchange_result.id)
+      end
     end
 
     test "change_exchange_result/1 returns a exchange_result changeset" do
@@ -260,11 +275,14 @@ defmodule Giftopotamus.ExchangesTest do
 
     test "get_participant_exclusion!/1 returns the participant_exclusion with given id" do
       participant_exclusion = participant_exclusion_fixture()
-      assert Exchanges.get_participant_exclusion!(participant_exclusion.id) == participant_exclusion
+
+      assert Exchanges.get_participant_exclusion!(participant_exclusion.id) ==
+               participant_exclusion
     end
 
     test "create_participant_exclusion/1 with valid data creates a participant_exclusion" do
-      assert {:ok, %ParticipantExclusion{} = participant_exclusion} = Exchanges.create_participant_exclusion(@valid_attrs)
+      assert {:ok, %ParticipantExclusion{} = participant_exclusion} =
+               Exchanges.create_participant_exclusion(@valid_attrs)
     end
 
     test "create_participant_exclusion/1 with invalid data returns error changeset" do
@@ -273,19 +291,30 @@ defmodule Giftopotamus.ExchangesTest do
 
     test "update_participant_exclusion/2 with valid data updates the participant_exclusion" do
       participant_exclusion = participant_exclusion_fixture()
-      assert {:ok, %ParticipantExclusion{} = participant_exclusion} = Exchanges.update_participant_exclusion(participant_exclusion, @update_attrs)
+
+      assert {:ok, %ParticipantExclusion{} = participant_exclusion} =
+               Exchanges.update_participant_exclusion(participant_exclusion, @update_attrs)
     end
 
     test "update_participant_exclusion/2 with invalid data returns error changeset" do
       participant_exclusion = participant_exclusion_fixture()
-      assert {:error, %Ecto.Changeset{}} = Exchanges.update_participant_exclusion(participant_exclusion, @invalid_attrs)
-      assert participant_exclusion == Exchanges.get_participant_exclusion!(participant_exclusion.id)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Exchanges.update_participant_exclusion(participant_exclusion, @invalid_attrs)
+
+      assert participant_exclusion ==
+               Exchanges.get_participant_exclusion!(participant_exclusion.id)
     end
 
     test "delete_participant_exclusion/1 deletes the participant_exclusion" do
       participant_exclusion = participant_exclusion_fixture()
-      assert {:ok, %ParticipantExclusion{}} = Exchanges.delete_participant_exclusion(participant_exclusion)
-      assert_raise Ecto.NoResultsError, fn -> Exchanges.get_participant_exclusion!(participant_exclusion.id) end
+
+      assert {:ok, %ParticipantExclusion{}} =
+               Exchanges.delete_participant_exclusion(participant_exclusion)
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Exchanges.get_participant_exclusion!(participant_exclusion.id)
+      end
     end
 
     test "change_participant_exclusion/1 returns a participant_exclusion changeset" do

@@ -7,6 +7,15 @@
     </section>
 
     <%= if @conn.assigns[:current_user] do %>
+      <div class="absolute top-4 right-4 flex items-center justify-around px-2">
+        <div class="flex-1"></div>
+
+        <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+          <span class="mx-2"><%= @conn.assigns.current_user.name %></span>
+          <%= submit "Logout", class: "btn btn-small btn-outline" %>
+        <% end %>
+      </div>
+
       <%= render("nav.html", assigns) %>
     <% end %>
   </header>

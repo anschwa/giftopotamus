@@ -44,6 +44,7 @@ defmodule Giftopotamus.Auth do
 
   def authenticate_user(name) do
     query = from u in User, where: u.name == ^name
+
     case Repo.one(query) do
       %User{} = user -> {:ok, user}
       nil -> {:error, :unauthorized}

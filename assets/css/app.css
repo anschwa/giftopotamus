@@ -35,7 +35,11 @@
     @apply shadow active:shadow-inner;
     @apply bg-gray-100 hover:bg-gray-200 text-gray-800;
 
+    &-small { @apply text-sm py-1 px-2; }
+    &-outline { @apply bg-white shadow-none border border-gray-800; }
+
     &-primary { @apply text-white bg-purple-500 hover:bg-purple-700; }
   }
+
 
 }

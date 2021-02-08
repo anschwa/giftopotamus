@@ -99,13 +99,19 @@ defmodule Giftopotamus.GroupsTest do
 
     test "update_group_member/2 with valid data updates the group_member" do
       group_member = group_member_fixture()
-      assert {:ok, %GroupMember{} = group_member} = Groups.update_group_member(group_member, @update_attrs)
+
+      assert {:ok, %GroupMember{} = group_member} =
+               Groups.update_group_member(group_member, @update_attrs)
+
       assert group_member.admin == false
     end
 
     test "update_group_member/2 with invalid data returns error changeset" do
       group_member = group_member_fixture()
-      assert {:error, %Ecto.Changeset{}} = Groups.update_group_member(group_member, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Groups.update_group_member(group_member, @invalid_attrs)
+
       assert group_member == Groups.get_group_member!(group_member.id)
     end
 
