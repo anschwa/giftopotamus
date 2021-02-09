@@ -5,20 +5,17 @@ defmodule GiftopotamusWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
+    plug :put_root_layout, {GiftopotamusWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
 
   pipeline :login_layout do
-    plug :put_root_layout, {GiftopotamusWeb.LayoutView, "login.html"}
-  end
-
-  pipeline :main_layout do
-    plug :put_root_layout, {GiftopotamusWeb.LayoutView, "main.html"}
+    plug :put_layout, {GiftopotamusWeb.LayoutView, "login.html"}
   end
 
   scope "/", GiftopotamusWeb do
-    pipe_through [:browser, :require_auth, :main_layout]
+    pipe_through [:browser, :require_auth]
 
     get "/", PageController, :index
     resources "/groups", GroupController
