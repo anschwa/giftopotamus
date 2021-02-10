@@ -10,8 +10,14 @@
       <div class="absolute top-4 right-4 flex items-center justify-around px-2">
         <div class="flex-1"></div>
 
-        <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
-          <span class="mx-2"><%= @conn.assigns.current_user.name %></span>
+        <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user, class: "flex"], fn _ -> %>
+          <div class="inline-flex items-center mx-4">
+            <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+            </svg>
+
+            <span><%= @conn.assigns.current_user.name %></span>
+          </div>
           <%= submit "Logout", class: "btn btn-small btn-outline" %>
         <% end %>
       </div>

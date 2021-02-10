@@ -6,7 +6,7 @@
 * Initial Schema Design
 | CONTEXT   | SCHEMA               | TABLE                  | FIELDS                                                                                   |
 |-----------+----------------------+------------------------+------------------------------------------------------------------------------------------|
-| Auth      | Users                | users                  | name:unique                                                                              |
+| Accounts   | Users                | users                  | name:unique                                                                              |
 |-----------+----------------------+------------------------+------------------------------------------------------------------------------------------|
 | Groups    | Group                | groups                 | name:unique                                                                              |
 | Groups    | GroupMember          | group_members          | group_id, user_id, admin                                                                 |
@@ -22,7 +22,7 @@
 ** Phoenix generators
 #+BEGIN_SRC text
 # users
-mix phx.gen.html Auth User users name:string:unique
+mix phx.gen.html Acocunts User users name:string:unique
 
 # groups
 mix phx.gen.html Groups Group groups name:string:unique

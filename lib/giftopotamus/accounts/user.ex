@@ -1,4 +1,4 @@
-defmodule Giftopotamus.Auth.User do
+defmodule Giftopotamus.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 

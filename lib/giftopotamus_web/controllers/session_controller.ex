@@ -1,14 +1,14 @@
 defmodule GiftopotamusWeb.SessionController do
   use GiftopotamusWeb, :controller
 
-  alias Giftopotamus.Auth
+  alias Giftopotamus.Accounts
 
   def new(conn, _) do
     render(conn, "new.html")
   end
 
   def create(conn, %{"user" => %{"name" => name}}) do
-    case Auth.authenticate_user(name) do
+    case Accounts.authenticate_user(name) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "Welcome Back!")

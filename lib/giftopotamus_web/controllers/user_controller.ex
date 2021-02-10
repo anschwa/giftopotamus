@@ -1,19 +1,19 @@
 defmodule GiftopotamusWeb.UserController do
   use GiftopotamusWeb, :controller
 
-  alias Giftopotamus.Auth
-  alias Giftopotamus.Auth.User
+  alias Giftopotamus.Accounts
+  alias Giftopotamus.Accounts.User
 
   def new(conn, _params) do
-    changeset = Auth.change_user(%User{})
+    changeset = Accounts.change_user(%User{})
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"user" => user_params}) do
-    case Auth.create_user(user_params) do
-      {:ok, user} ->
+    case Accounts.create_user(user_params) do
+      {:ok, _user} ->
         conn
-        |> put_flash(:info, "Account created. Please sign in")
+        |> put_flash(:info, "Accounts created. Please sign in")
         |> redirect(to: Routes.page_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->

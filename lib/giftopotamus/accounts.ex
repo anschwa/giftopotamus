@@ -1,12 +1,12 @@
-defmodule Giftopotamus.Auth do
+defmodule Giftopotamus.Accounts do
   @moduledoc """
-  The Auth context.
+  The Accounts context.
   """
 
   import Ecto.Query, warn: false
   alias Giftopotamus.Repo
 
-  alias Giftopotamus.Auth.User
+  alias Giftopotamus.Accounts.User
 
   @doc """
   Gets a single user.

@@ -37,7 +37,7 @@ defmodule GiftopotamusWeb.Router do
         |> halt()
 
       user_id ->
-        assign(conn, :current_user, Giftopotamus.Auth.get_user!(user_id))
+        assign(conn, :current_user, Giftopotamus.Accounts.get_user!(user_id))
     end
   end
 

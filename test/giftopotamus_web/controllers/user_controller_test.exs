@@ -1,14 +1,14 @@
 defmodule GiftopotamusWeb.UserControllerTest do
   use GiftopotamusWeb.ConnCase
 
-  alias Giftopotamus.Auth
+  alias Giftopotamus.Accounts
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
   @invalid_attrs %{name: nil}
 
   def fixture(:user) do
-    {:ok, user} = Auth.create_user(@create_attrs)
+    {:ok, user} = Accounts.create_user(@create_attrs)
     user
   end
 

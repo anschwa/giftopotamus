@@ -8,6 +8,6 @@
   <div class="flex flex-col mx-8">
     <%= text_input f, :name, placeholder: "Full name" %>
     <%= error_tag f, :name %>
-    <%= submit "Create Account", class: "btn btn-primary mt-3" %>
+    <%= submit "Create Accounts", class: "btn btn-primary mt-3" %>
   </div>
 <% end %>
