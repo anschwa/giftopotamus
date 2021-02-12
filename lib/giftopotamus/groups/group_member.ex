@@ -2,10 +2,14 @@ defmodule Giftopotamus.Groups.GroupMember do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Giftopotamus.Accounts.User
+  alias Giftopotamus.Groups.Group
+
   schema "group_members" do
     field :admin, :boolean, default: false
-    field :group_id, :id
-    field :user_id, :id
+
+    belongs_to :group, Group
+    belongs_to :user, User
 
     timestamps()
   end

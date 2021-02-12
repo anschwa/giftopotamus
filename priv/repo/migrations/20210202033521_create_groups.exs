@@ -3,11 +3,11 @@ defmodule Giftopotamus.Repo.Migrations.CreateGroups do
 
   def change do
     create table(:groups) do
-      add :name, :string
+      add(:name, :string)
 
       timestamps()
     end
 
-    create unique_index(:groups, [:name])
+    create(unique_index(:groups, [:name]))
   end
 end

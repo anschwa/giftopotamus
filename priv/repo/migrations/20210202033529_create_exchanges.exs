@@ -3,12 +3,12 @@ defmodule Giftopotamus.Repo.Migrations.CreateExchanges do
 
   def change do
     create table(:exchanges) do
-      add :name, :string
-      add :group_id, references(:groups, on_delete: :nothing)
+      add(:name, :string)
+      add(:group_id, references(:groups, on_delete: :nothing))
 
       timestamps()
     end
 
-    create index(:exchanges, [:group_id])
+    create(index(:exchanges, [:group_id]))
   end
 end

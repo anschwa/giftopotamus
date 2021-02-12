@@ -35,7 +35,11 @@ defmodule Giftopotamus.Groups do
       ** (Ecto.NoResultsError)
 
   """
-  def get_group!(id), do: Repo.get!(Group, id)
+  def get_group!(id) do
+    Group
+    |> Repo.get!(id)
+    |> Repo.preload(:members)
+  end
 
   @doc """
   Creates a group.
@@ -131,7 +135,11 @@ defmodule Giftopotamus.Groups do
       ** (Ecto.NoResultsError)
 
   """
-  def get_group_member!(id), do: Repo.get!(GroupMember, id)
+  def get_group_member!(id) do
+    GroupMember
+    |> Repo.get!(id)
+    |> Repo.preload([:user, :group])
+  end
 
   @doc """
   Creates a group_member.
