@@ -2,10 +2,14 @@ defmodule Giftopotamus.Exchanges.Participant do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Giftopotamus.Groups.GroupMember
+  alias Giftopotamus.Exchanges.Exchange
+
   schema "participants" do
     field :participating, :boolean, default: false
-    field :exchange_id, :id
-    field :user_id, :id
+
+    belongs_to :exchange, Exchange
+    belongs_to :group_member, GroupMember
 
     timestamps()
   end

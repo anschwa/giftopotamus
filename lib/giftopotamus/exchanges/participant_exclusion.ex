@@ -2,9 +2,11 @@ defmodule Giftopotamus.Exchanges.ParticipantExclusion do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Giftopotamus.Exchanges.Participant
+
   schema "participant_exclusions" do
-    field :participant_id, :id
-    field :exclude_participant_id, :id
+    belongs_to :participant, Participant
+    belongs_to :exclude_participant, Participant
 
     timestamps()
   end

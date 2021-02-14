@@ -6,13 +6,13 @@
 * Initial Schema Design
 | CONTEXT   | SCHEMA               | TABLE                  | FIELDS                                                                                   |
 |-----------+----------------------+------------------------+------------------------------------------------------------------------------------------|
-| Accounts   | Users                | users                  | name:unique                                                                              |
+| Accounts  | Users                | users                  | name:unique                                                                              |
 |-----------+----------------------+------------------------+------------------------------------------------------------------------------------------|
 | Groups    | Group                | groups                 | name:unique                                                                              |
 | Groups    | GroupMember          | group_members          | group_id, user_id, admin                                                                 |
 |-----------+----------------------+------------------------+------------------------------------------------------------------------------------------|
 | Exchanges | Exchange             | exchanges              | group_id, name                                                                           |
-| Exchanges | Participant          | participants           | exchange_id, user_id, has_participant_id, participating                                  |
+| Exchanges | Participant          | participants           | exchange_id, group_member_id, has_participant_id, participating                          |
 | Exchanges | Gift                 | gifts                  | exchange_id, to_participant_id, from_participant_id, name, description, upload_url, etc. |
 | Exchanges | ExchangeResult       | exchange_results       | exchange_id, who_participant_id, has_participant_id                                      |
 | Exchanges | ParticipantExclusion | participant_exclusions | participant_id, exclude_participant_id                                                   |
@@ -36,7 +36,7 @@ mix phx.gen.html Exchanges Exchange exchanges group_id:references:groups name:st
 
 # participants
 mix phx.gen.context Exchanges Participant participants \
-  exchange_id:references:exchanges user_id:references:users participating:boolean
+  exchange_id:references:exchanges group_member_id:references:group_members participating:boolean
 
 # gifts
 mix phx.gen.context Exchanges Gift gifts \
