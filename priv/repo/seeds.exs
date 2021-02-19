@@ -78,21 +78,21 @@ defmodule Giftopotamus.DatabaseSeeder do
   end
 
   def seed_groups(users) do
-    [first_user | other_users] = Enum.take_random(users, Enum.random(@min_members..@max_members))
+    Enum.each(1..@num_groups, fn _ ->
+      [first_user | other_users] = Enum.take_random(users, Enum.random(@min_members..@max_members))
 
-    # Make the first user and admin
-    admin = %GroupMember{admin: true, user_id: first_user.id}
+      # Make the first user and admin
+      admin = %GroupMember{admin: true, user_id: first_user.id}
 
-    members =
-      [admin] ++
+      members =
+        [admin] ++
         Enum.map(other_users, fn u ->
           # 10% chance of admin
           admin? = :rand.uniform(100) < 10
           %GroupMember{admin: admin?, user_id: u.id}
         end)
 
-    Enum.each(1..@num_groups, fn _ ->
-      %Group{name: "#{Faker.Person.last_name()}", members: members}
+      %Group{name: "#{Faker.StarWars.planet()}", members: members}
       # TODO: Handle unique constraint violation
       |> Repo.insert()
     end)

@@ -8,10 +8,17 @@ defmodule Giftopotamus.Groups do
 
   alias Giftopotamus.Groups.Group
 
+  def list_user_groups(user_id) do
+    Group
+    |> join(:left, [g], m in "group_members", on: m.group_id == g.id)
+    |> where([g, m], m.user_id == ^user_id)
+    |> Repo.all()
+  end
+
   def list_groups do
     Group
     |> limit(100)
-    |> Repo.all
+    |> Repo.all()
   end
 
   def get_group!(id) do
@@ -45,7 +52,7 @@ defmodule Giftopotamus.Groups do
   def list_group_members do
     GroupMember
     |> limit(100)
-    |> Repo.all
+    |> Repo.all()
   end
 
   def get_group_member!(id) do
@@ -53,9 +60,10 @@ defmodule Giftopotamus.Groups do
     |> where([m], m.id == ^id)
     |> join(:inner, [m], u in User, on: u.id == m.user_id)
     |> join(:inner, [m], g in Group, on: g.id == m.group_id)
-    |> preload([u, g], [user: u, group: g]) # Load everything
+    # Load everything
+    |> preload([u, g], user: u, group: g)
     # |> select([m, u, g], {m.id, u.name, g.name}) # Load specific fields
-    |> Repo.one
+    |> Repo.one()
   end
 
   def create_group_member(attrs \\ %{}) do
