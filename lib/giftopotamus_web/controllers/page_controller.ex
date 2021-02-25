@@ -4,9 +4,7 @@ defmodule GiftopotamusWeb.PageController do
   alias Giftopotamus.Groups
 
   def index(conn, _params) do
-    user_id = get_session(conn, :user_id)
-    groups = Groups.list_user_groups(user_id)
-
+    groups = Groups.list_user_groups(conn.assigns.current_user)
     render(conn, "index.html", groups: groups)
   end
 end

@@ -1,4 +1,4 @@
-<nav role="navigation" class="py-2">
+<nav role="navigation" class="mt-2 py-2">
   <ul>
     <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
       <li class="inline-block mr-2"><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>

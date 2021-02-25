@@ -6,12 +6,13 @@ defmodule Giftopotamus.Groups do
   import Ecto.Query, warn: false
   alias Giftopotamus.Repo
 
-  alias Giftopotamus.Groups.Group
+  alias Giftopotamus.Accounts.User
+  alias Giftopotamus.Groups.{Group, GroupMember}
 
-  def list_user_groups(user_id) do
+  def list_user_groups(user) do
     Group
     |> join(:left, [g], m in "group_members", on: m.group_id == g.id)
-    |> where([g, m], m.user_id == ^user_id)
+    |> where([g, m], m.user_id == ^user.id)
     |> Repo.all()
   end
 
@@ -45,9 +46,6 @@ defmodule Giftopotamus.Groups do
   def change_group(%Group{} = group, attrs \\ %{}) do
     Group.changeset(group, attrs)
   end
-
-  alias Giftopotamus.Groups.GroupMember
-  alias Giftopotamus.Accounts.User
 
   def list_group_members do
     GroupMember
@@ -84,5 +82,33 @@ defmodule Giftopotamus.Groups do
 
   def change_group_member(%GroupMember{} = group_member, attrs \\ %{}) do
     GroupMember.changeset(group_member, attrs)
+  end
+
+  @doc """
+  Create a group and add the current user as an admin
+  """
+  def create_group_and_admin_member(user, attrs \\ %{}) do
+    params = %{name: attrs["name"], members: [%{admin: true, user_id: user.id}]}
+
+    %Group{}
+    |> Group.changeset(params)
+    |> Repo.insert()
+    # |> Ecto.Changeset.cast_assoc(:members, with: &GroupMember.changeset/2)
+
+    # Ecto.Multi.new()
+    # |> Ecto.Multi.run(:group, fn _repo, _ ->
+    #   create_group(attrs)
+    # end)
+    # |> Ecto.Multi.run(:group_member, fn _repo, %{group: group} ->
+    #   create_group_member(%{admin: true, user_id: user.id, group_id: group.id})
+    # end)
+    # |> Repo.transaction()
+    # |> case do
+    #   {:ok, results} ->
+    #     {:ok, Map.take(results, :group)}
+
+    #   {:error, _failed_operation, failed_value, _changes_so_far} ->
+    #     {:error, failed_value}
+    # end
   end
 end

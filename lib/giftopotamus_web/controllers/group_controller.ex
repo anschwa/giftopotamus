@@ -15,7 +15,7 @@ defmodule GiftopotamusWeb.GroupController do
   end
 
   def create(conn, %{"group" => group_params}) do
-    case Groups.create_group(group_params) do
+    case Groups.create_group_and_admin_member(conn.assigns.current_user, group_params) do
       {:ok, group} ->
         conn
         |> put_flash(:info, "Group created successfully.")

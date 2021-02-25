@@ -1,5 +1,24 @@
-<h1>New Group</h1>
+<h1 class="text-3xl p-2">Create a Group</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.group_path(@conn, :create)) %>
+<section class="flex">
+  <div class="flex-grow mt-2 p-4">
+    <%= form_for @changeset, Routes.group_path(@conn, :create), fn f -> %>
+      <%= if @changeset.action do %>
+        <div class="alert alert-danger">
+          <p>Oops, something went wrong! Please check the errors below.</p>
+        </div>
+      <% end %>
 
-<span><%= link "Back", to: Routes.group_path(@conn, :index) %></span>
+      <div class="flex flex-col max-w-md">
+        <%= label f, :name, "Your group might be a family, company, or organization.", class: "block" %>
+        <%= text_input f, :name, placeholder: "Group Name" %>
+        <%= error_tag f, :name %>
+      </div>
+
+      <div class="mt-4">
+        <%= link "Cancel", to: Routes.page_path(@conn, :index), class: "mr-1" %>
+        <%= submit "Create", class: "btn btn-accent ml-1" %>
+      </div>
+    <% end %>
+  </div>
+</section>

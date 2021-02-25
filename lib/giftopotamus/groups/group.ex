@@ -15,6 +15,7 @@ defmodule Giftopotamus.Groups.Group do
   def changeset(group, attrs) do
     group
     |> cast(attrs, [:name])
+    |> cast_assoc(:members, with: &GroupMember.changeset/2)
     |> validate_required([:name])
     |> unique_constraint(:name)
   end

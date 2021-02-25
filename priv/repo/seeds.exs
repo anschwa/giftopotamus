@@ -78,19 +78,22 @@ defmodule Giftopotamus.DatabaseSeeder do
   end
 
   def seed_groups(users) do
+    # groups = ["Dantooine", "Hoth", "Mustafar", "Yavin", "Bespin", "Alderaan", "Dagobah", "Naboo"]
+
     Enum.each(1..@num_groups, fn _ ->
-      [first_user | other_users] = Enum.take_random(users, Enum.random(@min_members..@max_members))
+      [first_user | other_users] =
+        Enum.take_random(users, Enum.random(@min_members..@max_members))
 
       # Make the first user and admin
       admin = %GroupMember{admin: true, user_id: first_user.id}
 
       members =
         [admin] ++
-        Enum.map(other_users, fn u ->
-          # 10% chance of admin
-          admin? = :rand.uniform(100) < 10
-          %GroupMember{admin: admin?, user_id: u.id}
-        end)
+          Enum.map(other_users, fn u ->
+            # 10% chance of admin
+            admin? = :rand.uniform(100) < 10
+            %GroupMember{admin: admin?, user_id: u.id}
+          end)
 
       %Group{name: "#{Faker.StarWars.planet()}", members: members}
       # TODO: Handle unique constraint violation
@@ -101,6 +104,7 @@ defmodule Giftopotamus.DatabaseSeeder do
   def seed_exchanges(groups) do
     Enum.each(groups, fn group ->
       num_exchanges = Enum.random(1..@max_exchanges)
+
       Enum.each(1..num_exchanges, fn e ->
         group_members =
           GroupMember
