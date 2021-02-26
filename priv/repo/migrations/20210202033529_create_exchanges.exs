@@ -4,7 +4,7 @@ defmodule Giftopotamus.Repo.Migrations.CreateExchanges do
   def change do
     create table(:exchanges) do
       add(:name, :string)
-      add(:group_id, references(:groups, on_delete: :nothing))
+      add(:group_id, references(:groups, on_delete: :nothing), null: false)
 
       timestamps()
     end

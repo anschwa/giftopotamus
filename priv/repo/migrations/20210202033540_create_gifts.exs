@@ -5,8 +5,8 @@ defmodule Giftopotamus.Repo.Migrations.CreateGifts do
     create table(:gifts) do
       add(:description, :string)
       add(:exchange_id, references(:exchanges, on_delete: :nothing))
-      add(:to_participant_id, references(:participants, on_delete: :nothing))
-      add(:from_participant_id, references(:participants, on_delete: :nothing))
+      add(:to_participant_id, references(:participants, on_delete: :nothing), null: false)
+      add(:from_participant_id, references(:participants, on_delete: :nothing), null: false)
 
       timestamps()
     end

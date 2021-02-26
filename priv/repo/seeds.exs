@@ -78,9 +78,7 @@ defmodule Giftopotamus.DatabaseSeeder do
   end
 
   def seed_groups(users) do
-    # groups = ["Dantooine", "Hoth", "Mustafar", "Yavin", "Bespin", "Alderaan", "Dagobah", "Naboo"]
-
-    Enum.each(1..@num_groups, fn _ ->
+    Enum.each(1..@num_groups, fn group_num ->
       [first_user | other_users] =
         Enum.take_random(users, Enum.random(@min_members..@max_members))
 
@@ -95,9 +93,27 @@ defmodule Giftopotamus.DatabaseSeeder do
             %GroupMember{admin: admin?, user_id: u.id}
           end)
 
-      %Group{name: "#{Faker.StarWars.planet()}", members: members}
+      %Group{name: "#{group_num}", members: members}
       # TODO: Handle unique constraint violation
       |> Repo.insert()
+    end)
+
+    # Faker.StarWars.planet/0
+    [
+      "Alderaan",
+      "Bespin",
+      "Coruscant",
+      "Dagobah",
+      "Dantooine",
+      "Endor",
+      "Hoth",
+      "Mustafar",
+      "Naboo",
+      "Yavin"
+    ]
+    |> Enum.with_index()
+    |> Enum.each(fn {name, id} ->
+      Repo.update_all(from(g in Group, where: g.id == ^id+1), set: [name: name])
     end)
   end
 

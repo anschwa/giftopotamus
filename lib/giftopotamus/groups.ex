@@ -88,27 +88,21 @@ defmodule Giftopotamus.Groups do
   Create a group and add the current user as an admin
   """
   def create_group_and_admin_member(user, attrs \\ %{}) do
-    params = %{name: attrs["name"], members: [%{admin: true, user_id: user.id}]}
+    multi =
+      Ecto.Multi.new()
+      |> Ecto.Multi.run(:group, fn _repo, _ ->
+        create_group(attrs)
+      end)
+      |> Ecto.Multi.run(:group_member, fn _repo, %{group: group} ->
+        create_group_member(%{admin: true, user_id: user.id, group_id: group.id})
+      end)
+      |> Repo.transaction()
 
-    %Group{}
-    |> Group.changeset(params)
-    |> Repo.insert()
-    # |> Ecto.Changeset.cast_assoc(:members, with: &GroupMember.changeset/2)
-
-    # Ecto.Multi.new()
-    # |> Ecto.Multi.run(:group, fn _repo, _ ->
-    #   create_group(attrs)
-    # end)
-    # |> Ecto.Multi.run(:group_member, fn _repo, %{group: group} ->
-    #   create_group_member(%{admin: true, user_id: user.id, group_id: group.id})
-    # end)
-    # |> Repo.transaction()
-    # |> case do
-    #   {:ok, results} ->
-    #     {:ok, Map.take(results, :group)}
-
-    #   {:error, _failed_operation, failed_value, _changes_so_far} ->
-    #     {:error, failed_value}
-    # end
+      case multi do
+        {:ok, result} ->
+          {:ok, result.group}
+        {:error, _failed_operation, failed_value, _changes_so_far} ->
+          {:error, failed_value}
+      end
   end
 end

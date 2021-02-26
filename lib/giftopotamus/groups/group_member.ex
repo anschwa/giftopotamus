@@ -17,7 +17,7 @@ defmodule Giftopotamus.Groups.GroupMember do
   @doc false
   def changeset(group_member, attrs) do
     group_member
-    |> cast(attrs, [:admin])
+    |> cast(attrs, [:admin, :user_id, :group_id])
     |> validate_required([:admin])
   end
 end

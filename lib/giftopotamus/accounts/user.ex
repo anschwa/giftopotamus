@@ -2,8 +2,6 @@ defmodule Giftopotamus.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Giftopotamus.Groups.Group
-
   schema "users" do
     field :name, :string
 

@@ -3,8 +3,8 @@ defmodule Giftopotamus.Repo.Migrations.CreateParticipantExclusions do
 
   def change do
     create table(:participant_exclusions) do
-      add(:participant_id, references(:participants, on_delete: :nothing))
-      add(:exclude_participant_id, references(:participants, on_delete: :nothing))
+      add(:participant_id, references(:participants, on_delete: :nothing), null: false)
+      add(:exclude_participant_id, references(:participants, on_delete: :nothing), null: false)
 
       timestamps()
     end

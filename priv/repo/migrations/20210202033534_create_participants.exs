@@ -4,8 +4,8 @@ defmodule Giftopotamus.Repo.Migrations.CreateParticipants do
   def change do
     create table(:participants) do
       add(:participating, :boolean, default: false, null: false)
-      add(:exchange_id, references(:exchanges, on_delete: :nothing))
-      add(:group_member_id, references(:group_members, on_delete: :nothing))
+      add(:exchange_id, references(:exchanges, on_delete: :delete_all), null: false)
+      add(:group_member_id, references(:group_members, on_delete: :nothing), null: false)
 
       timestamps()
     end
