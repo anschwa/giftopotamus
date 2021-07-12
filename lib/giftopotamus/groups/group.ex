@@ -11,7 +11,6 @@ defmodule Giftopotamus.Groups.Group do
     timestamps()
   end
 
-  @doc false
   def changeset(group, attrs) do
     group
     |> cast(attrs, [:name])

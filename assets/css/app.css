@@ -41,5 +41,9 @@
 
     &-primary { @apply text-white bg-purple-500 hover:bg-purple-700; }
     &-accent { @apply text-white bg-yellow-500 hover:bg-yellow-700; }
+
+    &-info { @apply text-white bg-blue-500 hover:bg-blue-700; }
+    &-warning { @apply text-white bg-yellow-500 hover:bg-yellow-700; }
+    &-error { @apply text-white bg-red-500 hover:bg-red-700; }
   }
 }

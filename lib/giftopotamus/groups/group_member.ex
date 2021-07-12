@@ -14,7 +14,6 @@ defmodule Giftopotamus.Groups.GroupMember do
     timestamps()
   end
 
-  @doc false
   def changeset(group_member, attrs) do
     group_member
     |> cast(attrs, [:admin, :user_id, :group_id])
