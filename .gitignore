@@ -1,0 +1,8 @@
+# Ignore typical invocations of "go build (...)"
+cmd/app/app
+cmd/mailer/mailer
+cmd/hasher/hasher
+
+# Ignore generated files and dependencies
+node_modules/
+#public/css/tailwind.css

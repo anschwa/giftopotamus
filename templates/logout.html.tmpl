@@ -1,0 +1,17 @@
+{{- define "logout" -}}
+<!doctype html>
+<html lang="en">
+  <head>
+    {{ template "meta" }}
+    <title>{{ .Title }}</title>
+  </head>
+
+  <body class="py-2 px-4 max-w-screen-2xl mx-auto">
+    {{template "header" .}}
+
+    <main role="main"></main>
+
+    {{template "footer"}}
+  </body>
+</html>
+{{- end -}}

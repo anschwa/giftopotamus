@@ -1,0 +1,5 @@
+name,email,sms,restrictions,previous,participating,has
+foo,foo@example.com,555 111 1111,foo,,yes,
+bar,bar@example.com,(555) 222-2222,,baz,yes,
+baz,baz@example.com,555.333.3333,,,yes,
+quux,quux@example.com,5554444444,"foo, bar, baz",,no,

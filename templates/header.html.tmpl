@@ -1,0 +1,77 @@
+{{- define "header" -}}
+<header class="flex justify-between flex-wrap mt-2 mb-6">
+  <h1 class="flex-none font-bold text-2xl md:text-6xl">
+    <a href="/" class="hover:bg-gray-100 underline">
+      Giftopotamus.com
+    </a>
+  </h1>
+
+  <div class="flex-grow mx-2 flex items-center justify-end select-none">
+    <nav class="relative">
+      {{- if eq .Username "" -}}
+      <a
+        href="/login"
+        class="py-1 px-2 mx-2 text-base font-semibold rounded underline hover:bg-gray-100"
+      >
+        Log in
+      </a>
+      {{- else -}}
+      <form
+        class="flex items-center"
+        method="post"
+        action="/logout"
+      >
+
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span class="ml-2 mr-1 text-base text-black">
+          {{.Username}}
+        </span>
+
+        <span class="mx-2">|</span>
+
+        <button
+          name="logout"
+          type="submit"
+          class="py-1 px-2 text-base font-semibold rounded underline hover:bg-gray-100"
+        >
+          Log out
+        </button>
+      </form>
+      {{- end -}}
+    </nav>
+  </div>
+
+  <section id="status-bar" class="w-full">
+    {{- if .SuccessMsg -}}
+    <div class="my-4 py-2 px-4 flex justify-between rounded bg-green-100">
+      <p>{{.SuccessMsg}}</p>
+
+      <button
+        type="button"
+        title="Close"
+        class="mx-4"
+        onclick="g('status-bar').classList.add('hidden')"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    {{- end -}}
+
+    {{- if .ErrorMsg -}}
+    <div class="my-4 py-2 px-4 flex justify-between rounded bg-red-100">
+      <p>{{.ErrorMsg}}</p>
+
+      <button
+        type="button"
+        title="Close"
+        class="mx-4"
+        onclick="g('status-bar').classList.add('hidden')"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    {{- end -}}
+  </section>
+
+</header>
+{{- end -}}

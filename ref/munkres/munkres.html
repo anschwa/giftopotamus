@@ -1,0 +1,596 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0050)http://216.249.163.93/bob.pilgrim/445/munkres.html -->
+<html><head><title>munkres</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta content="R A Pilgrim" name="Author">
+<meta content="MSHTML 6.00.2900.3243" name="GENERATOR"></head>
+<body>
+<center><b><i><font face="Arial,Helvetica">Munkres' Assignment 
+Algorithm</font></i></b> <br><b><i><font face="Arial,Helvetica"><font size="-1">Modified for Rectangular Matrices</font></font></i></b></center>
+<p><font face="Arial,Helvetica"><font size="-1"><i>Assignment Problem</i> - Let 
+<i>C</i> be an <i>nxn </i>matrix representing the costs of each of <i>n 
+</i>workers to perform any of <i>n</i> jobs.&nbsp; The assignment problem is to 
+assign jobs to workers so as to minimize the total cost. Since each worker can 
+perform only one job and each job can be assigned to only one worker the 
+assignments constitute an <i>independent set </i>of the matrix 
+<i>C</i>.</font></font> </p>
+<center><img style="WIDTH: 549px; HEIGHT: 144px" alt="" src="munkres_files/image7_1.gif" nosave=""></center><font face="Arial,Helvetica"><font size="-1">An arbitrary assignment is shown above in 
+which worker <i>a</i> is assigned job <i>q</i>, worker <i>b</i> is assigned job 
+<i>s</i> and so on.&nbsp; The total cost of this assignment is <i>23</i>.&nbsp; 
+Can you find a lower cost assignment? Can you find the minimal cost assignment? 
+Remember that each assignment must be unique in its row and 
+column.</font></font> 
+<p><font face="Arial,Helvetica"><font size="-1">A brute-force algorithm for solving 
+the assignment problem involves generating all independent sets of the matrix 
+<i>C</i>, computing the total costs of each assignment and a search of all 
+assignment to find a minimal-sum independent set. The complexity of this method 
+is driven by the number of independent assignments possible in an <i>nxn 
+</i>matrix. There are <i>n </i>choices for the first assignment, <i>n-1 
+</i>choices for the second assignment and so on, giving n! possible assignment 
+sets. Therefore, this approach has, at least, an exponential runtime 
+complexity.</font></font> </p>
+<center>
+<p><img style="WIDTH: 597px; HEIGHT: 123px" alt="" src="munkres_files/image7_2.gif" nosave=""></p></center>
+<p><font face="Arial,Helvetica"><font size="-1">As each assignment is chosen that 
+row and column are eliminated from consideration.&nbsp; The question is raised 
+as to whether there is a better algorithm.&nbsp; In fact there exists a 
+polynomial runtime complexity algorithm for solving the assignment problem 
+developed by James Munkre's in the late 1950's despite the fact that some 
+references still describe this as a problem of exponential 
+complexity.</font></font><font face="Arial,Helvetica"><font size="-1"></font></font> 
+</p>
+<p><font face="Arial,Helvetica"><font size="-1">The following 6-step algorithm is a 
+modified form of the original Munkres' Assignment Algorithm (sometimes referred 
+to as the Hungarian Algorithm).&nbsp; This algorithm describes to the manual 
+manipulation of a two-dimensional matrix by starring and priming zeros and by 
+covering and uncovering rows and columns.&nbsp; This is because, at the time of 
+publication (1957), few people had access to a computer and the algorithm was 
+exercised by hand.</font></font> <br>&nbsp; </p>
+<blockquote><i><font face="Arial,Helvetica"><font size="-1"><b>Step 0:&nbsp;</b> 
+  Create an nxm&nbsp; matrix called the cost matrix in which each element 
+  represents the cost of assigning one of n workers to one of m jobs.&nbsp; 
+  Rotate the matrix so that there are at least as many columns as rows and let 
+  k=min(n,m).</font></font></i> 
+  <p><i><font face="Arial,Helvetica"><font size="-1"><b>Step 1:&nbsp;</b> For each 
+  row of the matrix, find the smallest element and subtract it from every 
+  element in its row.&nbsp; Go to Step 2.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1"><b>Step 2:&nbsp;</b> Find a 
+  zero (Z) in the resulting matrix.&nbsp; If there is no starred zero in its row 
+  or column, star Z. Repeat for each element in the matrix. Go to Step 
+  3.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1"><b>Step 3:</b>&nbsp; Cover each 
+  column containing a starred zero.&nbsp; If K columns are covered, the starred 
+  zeros describe a complete set of unique assignments.&nbsp; In this case, Go to 
+  DONE, otherwise, Go to Step 4.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1"><b>Step 4:&nbsp;</b> Find a 
+  noncovered zero and prime it.&nbsp; If there is no starred zero in the row 
+  containing this primed zero, Go to Step 5.&nbsp; Otherwise, cover this row and 
+  uncover the column containing the starred zero. Continue in this manner until 
+  there are no uncovered zeros left. Save the smallest uncovered value and Go to 
+  Step 6.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1"><b>Step 5:</b>&nbsp; Construct 
+  a series of alternating primed and starred zeros as follows.&nbsp; Let 
+  Z<sub>0</sub> represent the uncovered primed zero found in Step 4.&nbsp; Let 
+  Z<sub>1</sub> denote the starred zero in the column of Z<sub>0</sub> (if any). 
+  Let Z<sub>2</sub> denote the primed zero in the row of Z<sub>1</sub> (there 
+  will always be one).&nbsp; Continue until the series terminates at a primed 
+  zero that has no starred zero in its column.&nbsp; Unstar each starred zero of 
+  the series, star each primed zero of the series, erase all primes and uncover 
+  every line in the matrix.&nbsp; Return to Step 3.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1"><b>Step 6:</b>&nbsp; Add the 
+  value found in Step 4 to every element of each covered row, and subtract it 
+  from every element of each uncovered column.&nbsp; Return to Step 4 without 
+  altering any stars, primes, or covered lines.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1"><b>DONE:&nbsp;</b> Assignment 
+  pairs are indicated by the positions of the starred zeros in the cost 
+  matrix.&nbsp; If C(i,j) is a starred zero, then the element associated with 
+  row i is assigned to the element associated with column 
+  j.</font></font></i></p></blockquote><font face="Arial,Helvetica"><font size="-1">Some of these descriptions require careful interpretation.&nbsp; In Step 
+4, for example, the possible situations are, that there is a noncovered zero 
+which get primed and if there is no starred zero in its row the program goes 
+onto Step 5.&nbsp; The other possible way out of Step 4 is that there are no 
+noncovered zeros at all, in which case the program goes to Step 6.</font></font> 
+<br>&nbsp; 
+<p><font face="Arial,Helvetica"><font size="-1">At first it may seem that the 
+erratic nature of this algorithm would make its implementation difficult.&nbsp; 
+However, we can apply a few general rules of programming style to simplify this 
+problem.&nbsp; The same rules can be applied to any 
+step-algorithm.</font></font> <br>&nbsp; <br>&nbsp; <br></p>
+<center>
+<p><b><i><font face="Arial,Helvetica">Good Programming Style and Design 
+Practices</font></i></b></p></center>
+<p><br></p>
+<blockquote><i><font face="Arial,Helvetica"><font size="-1">1. Strive to create 
+  readable source code through the use of blank lines, comments and 
+  spacing.</font></font></i> 
+  <p><i><font face="Arial,Helvetica"><font size="-1">2. Use consistent naming 
+  conventions, for variable and constant identifiers and 
+  subprograms.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1">3. Use consistent indentation 
+  and always indent the bodies of conditionals and looping 
+  constructs.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1">4. Place logically distinct 
+  computations in their own execution blocks or in separate 
+  subprograms.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1">5. Don't use global variables 
+  inside subprograms except where such use is clear and improves readability and 
+  efficiency.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1">6. Use local variables where 
+  appropriate and try to limit the creation of unnecessary identifiers in the 
+  main program.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1">7. Open I/O files only when 
+  needed and close them as soon as they are no longer 
+  required.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1">8. Work to keep the level of 
+  nesting of conditionals and loops at a minimum.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1">9. Use constant identifiers 
+  instead of hardwiring for-loop and array ranges in the body of the code with 
+  literal values.</font></font></i> </p>
+  <p><i><font face="Arial,Helvetica"><font size="-1">10. When you feel that things 
+  are getting out of control, start over. Re-coding is good 
+  coding.</font></font></i></p></blockquote><font face="Arial,Helvetica"><font size="-1">By applying Rule 4 to the step-algorithm we decide to make each step its 
+own procedure.&nbsp; Now we can apply Rule 8 by using a case statement in a loop 
+to control the ordering of step execution.<br><br>A old implementation of 
+Munkres - This implementation is <br></font></font>
+<blockquote><tt><b>procedure</b> munkres <b>is</b></tt> <br><tt>&nbsp; n : 
+  constant integer := 
+  20;</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+  <small style="COLOR: rgb(0,153,0)"><span style="FONT-FAMILY: courier">-- num 
+  rows/columns (this version is hard-wired for square 
+  matrices)</span></small><br><tt>&nbsp; C : is array(1..n,1..n) of 
+  float;</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  <small style="COLOR: rgb(0,153,0)"><span style="FONT-FAMILY: courier">-- cost 
+  matrix</span></small><br><tt>&nbsp; M : is array(1..n,1..n) of 
+  integer;</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  <small style="COLOR: rgb(0,153,0)"><span style="FONT-FAMILY: courier">-- a 
+  mask matrix to indicate primed (= 2) and starred (=1) zeros in 
+  C</span></small><br><tt>&nbsp; Row,Col : is array(1..n) of 
+  integer;</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="COLOR: rgb(0,153,0)"> </span><small><span style="FONT-FAMILY: courier"><span style="COLOR: rgb(0,153,0)">-- maintains 
+  record of which row/columns are covered.</span>&nbsp; 
+  </span></small><br><tt>&nbsp; stepnum : 
+  integer;</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="COLOR: rgb(0,153,0)"> </span><small style="COLOR: rgb(0,153,0)"><span style="FONT-FAMILY: courier">-- covered = 1, non-covered = 
+  0</span></small><br><tt>&nbsp; done : boolean;</tt> 
+  <p><tt>&nbsp; <b>function</b> step1(stepnum: <b>in out</b> integer) 
+  <b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; :</tt> <br><tt>&nbsp; 
+  <b>function</b> step2(stepnum: <b>in out</b> integer) <b>is</b></tt> 
+  <br><tt>&nbsp;&nbsp;&nbsp; :</tt> <br><tt>&nbsp; <b>function</b> 
+  step3(stepnum: <b>in out</b> integer) <b>is</b></tt> 
+  <br><tt>&nbsp;&nbsp;&nbsp; :</tt> </p>
+  <p><b><tt>begin</tt></b> <br><tt>&nbsp; done:=false;</tt> <br><tt>&nbsp; 
+  stepnum:=1;</tt> <br><tt>&nbsp; <b>while</b> <b>not</b>(done) <b>loop</b></tt> 
+  <br><tt>&nbsp;&nbsp;&nbsp; <b>case</b> stepnum <b>is</b></tt> 
+  <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>when</b> 1 =&gt; 
+  step1(stepnum);</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>when</b> 2 
+  =&gt; step2(stepnum);</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>when</b> 
+  3 =&gt; step3(stepnum);</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+  <b>when</b> 4 =&gt; step4(stepnum);</tt> 
+  <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>when</b> 5 =&gt; 
+  step5(stepnum);</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>when</b> 6 
+  =&gt; step6(stepnum);</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>when</b> 
+  <b>others</b> =&gt; done:=true;</tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>end 
+  case</b>;</tt> <br><tt>&nbsp; <b>end loop</b>;</tt> <br><tt><b>end</b> 
+  munkres;</tt></p></blockquote><font face="Arial,Helvetica"><font size="-1">In each 
+pass of the loop the step procedure called sets the value of stepnum for the 
+next pass.&nbsp; When the algorithm is finished the value of stepnum is set to 
+some value outside the range 1..6 so that done will be set to true and the 
+program will end.&nbsp; In the completed program the tagged (starred) zeros flag 
+the row/column pairs that have been assigned to each other.&nbsp; We will 
+discuss the implementation of a procedure for each step of Munkres' Algorithm 
+below. We will assume that the cost matrix <i>C(i,j)</i> has already been loaded 
+with the first index referring to the row number and the second index referring 
+to the column number.</font></font> 
+<center>
+<p><b><i><font face="Arial,Helvetica">Step 1</font></i></b></p></center>
+<p><font face="Arial,Helvetica"><font size="-1"><i>For each row of the matrix, find 
+the smallest element and subtract it from every element in its row.&nbsp; Go to 
+Step 2. </i>We can define a local variable called <i>minval</i> that is used to 
+hold the smallest value in a row.&nbsp; Notice that there are two loops over the 
+index <i>j</i> appearing inside an outer loop over the index <i>i</i>. The first 
+inner loop over the index <i>j</i> searches a row for the <i>minval</i>.&nbsp; 
+Once <i>minval</i> has been found this value is subtracted from each element of 
+that row in the second inner loop over <i>j</i>.&nbsp; The value of step is set 
+to <i>2</i> just before <i>stepone</i> ends.</font></font> </p>
+<p><font face="Arial,Helvetica"><font size="+1">&nbsp;</font></font><tt><b>procedure</b> stepone(step : <b>in out</b> 
+integer) <b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; minval : integer;</tt> 
+<br><tt>&nbsp; <b>begin</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i 
+<b>in</b> 1..n <b>loop</b></tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; minval:=C(i,1);</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 2..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> 
+minval&gt;C(i,j) <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+minval:=C(i,j);</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+if</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C(i,j):=C(i,j)-minval;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+loop</b>;</tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+step:=2;</tt> <br><tt>&nbsp; <b>end</b> stepone;</tt> </p>
+<center>
+<p><b><i><font face="Arial,Helvetica">Step 2</font></i></b></p></center>
+<p><font face="Arial,Helvetica"><font size="-1"><i>Find a zero (Z) in the resulting 
+matrix.&nbsp; If there is no starred zero in its row or column, star Z. Repeat 
+for each element in the matrix. Go to Step 3.&nbsp; </i>In this step, we 
+introduce the mask matrix M, which in the same dimensions as the cost matrix and 
+is used to star and prime zeros of the cost matrix.&nbsp; If M(i,j)=1 then 
+C(i,j) is a starred zero,&nbsp; If M(i,j)=2 then C(i,j) is a primed zero.&nbsp; 
+We also define two vectors R_cov and C_cov that are used to "cover" the rows and 
+columns of the cost matrix C.&nbsp; In the nested loop (over indices i and j) we 
+check to see if C(i,j) is a zero value and if its column or row is not already 
+covered.&nbsp; If not then we star this zero (i.e. set M(i,j)=1) and cover its 
+row and column (i.e. set R_cov(i)=1 and C_cov(j)=1).&nbsp; Before we go on to 
+Step 3, we uncover all rows and columns so that we can use the cover vectors to 
+help us count the number of starred zeros.</font></font> </p>
+<p><tt>&nbsp; <b>procedure</b> steptwo(step: <b>in out </b>integer) 
+<b>is</b></tt> <br><tt>&nbsp; <b>begin</b></tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i <b>in</b> 1..n <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> 
+C(i,j)=0 <b>and</b> C_cov(j)=0 <b>and</b> R_cov(i)=0 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M(i,j):=1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; C_cov(j):=1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R_cov(i):=1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i <b>in</b> 1..n <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; C_cov(i):=0;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R_cov(i):=0;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+step:=3;</tt> </p>
+<p><tt>&nbsp; <b>end </b>steptwo;</tt> </p>
+<center>
+<p><b><i><font face="Arial,Helvetica">Step 3</font></i></b></p></center>
+<p><font face="Arial,Helvetica"><font size="-1"><i>Cover each column containing a 
+starred zero.&nbsp; If K columns are covered, the starred zeros describe a 
+complete set of unique assignments.&nbsp; In this case, Go to DONE, otherwise, 
+Go to Step 4. </i>Once we have searched the entire cost matrix, we count the 
+number of independent zeros found.&nbsp; If we have found (and starred) K 
+independent zeros then we are done.&nbsp; If not we procede to Step 
+4.</font></font> </p>
+<p><tt>&nbsp; <b>procedure</b> stepthree(step : <b>in out</b> integer) 
+<b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; count : integer;</tt> <br><tt>&nbsp; 
+<b>begin</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 
+1..n <b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<b>if</b> M(i,j)=1 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; C_cov(j):=1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+count:=0;</tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; count:=count + 
+C_cov(j);</tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>if</b> count&gt;=n <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; step:=7;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+<b>else</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; step:=4;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> <br><tt>&nbsp; <b>end</b> 
+stepthree;</tt> </p>
+<center>
+<p><b><i><font face="Arial,Helvetica">Step 4</font></i></b></p></center>
+<p><i><font face="Arial,Helvetica"><font size="-1">Find a noncovered zero and prime 
+it.&nbsp; If there is no starred zero in the row containing this primed zero, Go 
+to Step 5.&nbsp; Otherwise, cover this row and uncover the column containing the 
+starred zero. Continue in this manner until there are no uncovered zeros left. 
+Save the smallest uncovered value and Go to Step 6.</font></font></i><font face="Arial,Helvetica"><font size="-1"> In this step, statements such as "find a 
+noncovered zero" are clearly distinct operations that deserve their own 
+functional blocks.&nbsp; We have decomposed this step into a main procedure and 
+three subprograms (2 procedures and a boolean function).</font></font> </p>
+<p><font face="Arial,Helvetica"><font size="+1">&nbsp;</font></font><tt><b>procedure</b> stepfour(step : <b>in out</b> 
+integer) <b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; row,col&nbsp; : integer;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; done&nbsp;&nbsp;&nbsp;&nbsp; : boolean;</tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp; <b>procedure</b> find_a_zero(row,col : <b>out</b> 
+integer) <b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i,j : 
+integer;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done: boolean;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>begin</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; row:=0;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; col:=0;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i:=1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done:=false;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; j:=1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> C(i,j)=0 
+<b>and</b> R_cov(i)=0 <b>and</b> C_cov(j)=0 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+row:=i;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+col:=j;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+done:=true;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+if</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+j:=j+1;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>exit 
+when</b> j&gt;n;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+loop</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i:=i+1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> i&gt;n <b>then</b> 
+done:=true; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>exit when</b> done;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b> end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end</b> find_a_zero;</tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp; <b>function</b> star_in_row(row : integer) 
+<b>return</b> boolean <b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp; tbool : 
+boolean;</tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>begin</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tbool:=false;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> 
+M(row,j)=1 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tbool:=true;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>return</b> tbool;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end</b> star_in_row;</tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp; <b>procedure</b> find_star_in_row(row, col : <b>in 
+out</b> integer) <b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>begin</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; col:=0;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> 
+M(row,j)=1 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; col:=j;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end</b> find_star_in_row;</tt> </p>
+<p><tt>&nbsp; <b>begin</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; done:=false;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>while not</b>(done) <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; find_a_zero(row,col);</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> row=0 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done:=true;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; step:=6;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>else</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M(row,col):=2;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> star_in_row(row) 
+<b>then</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+find_star_in_row(row,col);</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+R_cov(row):=1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C_cov(col):=0;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<b>else</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+done:=true;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+step:=5;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Z0_r:=row;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Z0_c:=col;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+if</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp; <b>end</b> 
+stepfour;</tt> </p>
+<center>
+<p><b><i><font face="Arial,Helvetica">Step 5</font></i></b></p></center>
+<p><i><font face="Arial,Helvetica"><font size="-1">Construct a series of alternating 
+primed and starred zeros as follows.&nbsp; Let Z<sub>0</sub> represent the 
+uncovered primed zero found in Step 4.&nbsp; Let Z<sub>1</sub> denote the 
+starred zero in the column of Z<sub>0</sub> (if any). Let Z<sub>2</sub> denote 
+the primed zero in the row of Z<sub>1</sub> (there will always be one).&nbsp; 
+Continue until the series terminates at a primed zero that has no starred zero 
+in its column.&nbsp; Unstar each starred zero of the series, star each primed 
+zero of the series, erase all primes and uncover every line in the matrix.&nbsp; 
+Return to Step 3.</font></font></i><font face="Arial,Helvetica"><font size="-1">&nbsp; You may notice that Step 5 seems vaguely familiar.&nbsp; It is a 
+verbal description of the augmenting path algorithm (for solving the maximal 
+matching problem) which we discussed in Lecture 3.&nbsp; We decompose the 
+operations of this step into a main procedure and five relatively simple 
+subprograms.</font></font> </p>
+<p><font face="Arial,Helvetica"><font size="+1">&nbsp;</font></font><tt><b>procedure</b> stepfive(step : <b>in out 
+</b>integer) <b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; count : integer;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; done&nbsp; : boolean;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+r,c&nbsp;&nbsp; : integer;</tt> </p>
+<p><tt>&nbsp; <b>procedure</b> find_star_in_col(c : <b>in</b> integer; r : <b>in 
+out</b> integer) <b>is</b></tt> <br><tt>&nbsp; <b>begin</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; r:=0;</tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i 
+<b>in</b> 1..n <b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> 
+M(i,c)=1 <b>then</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+r:=i;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;<b> end loop</b>;</tt> <br><tt>&nbsp; <b>end</b> 
+find_star_in_col;</tt> </p>
+<p><tt>&nbsp; <b>procedure</b> find_prime_in_row(r : <b>in</b> integer; c : 
+<b>in out</b> integer) <b>is</b></tt> <br><tt>&nbsp; <b>begin</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 1..n <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> M(r,j)=2 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; c:=j;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b> end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;<b> end loop</b>;</tt> <br><tt>&nbsp; <b>end</b> 
+find_prime_in_row;</tt> </p>
+<p><tt>&nbsp; <b>procedure</b> convert_path <b>is</b></tt> <br><tt>&nbsp; 
+<b>begin</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i <b>in</b> 1..count 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> 
+M(path(i,1),path(i,2))=1 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+M(path(i,1),path(i,2)):=0;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<b>else</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+M(path(i,1),path(i,2)):=1;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+if</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp; 
+<b>end</b> convert_path;</tt> </p>
+<p><tt>&nbsp; <b>procedure</b> clear_covers <b>is</b></tt> <br><tt>&nbsp; 
+<b>begin</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R_cov(i):=0;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; C_cov(i):=0;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp; <b>end</b> 
+clear_covers;</tt> </p>
+<p><tt>&nbsp; <b>procedure</b> erase_primes <b>is</b></tt> <br><tt>&nbsp; 
+<b>begin</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j <b>in</b> 
+1..n <b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<b>if</b> M(i,j)=2 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M(i,j):=0;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b> end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b> end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp; <b>end</b> 
+erase_primes;</tt> </p>
+<p><tt>&nbsp; <b>begin</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; count:=1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; path(count,1):=z0_r;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+path(count,2):=z0_c;</tt> <br><tt>&nbsp;&nbsp;&nbsp; done:=false;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>while</b> <b>not</b>(done) <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; find_star_in_col(path(count,2),r);</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> r&gt;0 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; count:=count+1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path(count,1):=r;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+path(count,2):=path(count-1,2);</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<b>else</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+done:=true;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> <b>not</b>(done) 
+<b>then</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+find_prime_in_row(path(count,1),c);</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; count:=count+1;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+path(count,1):=path(count-1,1);</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; path(count,2):=c;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+convert_path;</tt> <br><tt>&nbsp;&nbsp;&nbsp; clear_covers;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; erase_primes;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+step:=3;</tt> <br><tt>&nbsp;<b> end </b>stepfive;</tt> </p>
+<center>
+<p><b><i><font face="Arial,Helvetica">Step 6</font></i></b></p></center>
+<p><font face="Arial,Helvetica"><font size="-1"><i>Add the value found in Step 4 to 
+every element of each covered row, and subtract it from every element of each 
+uncovered column.&nbsp; Return to Step 4 without altering any stars, primes, or 
+covered lines.</i> Notice that this step uses the smallest uncovered value in 
+the cost matrix to modify the matrix.&nbsp; Even though this step refers to the 
+value being found in Step 4 it is more convenient to wait until you reach Step 6 
+before searching for this value.&nbsp; It may seem that since the values in the 
+cost matrix are being altered, we would lose sight of the original 
+problem.&nbsp; However, we are only changing certain values that have already 
+been tested and found not to be elements of the minimal assignment.&nbsp; Also 
+we are only changing the values by an amount equal to the smallest value in the 
+cost matrix, so we will not jump over the optimal (i.e. minimal assignment) with 
+this change.</font></font> </p>
+<p><font face="Arial,Helvetica"><font size="+1">&nbsp; 
+</font></font><tt><b>procedure</b> stepsix(step : <b>in out</b> integer) 
+<b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; minval : integer;</tt> </p>
+<p><tt>&nbsp;&nbsp;&nbsp; <b>procedure</b> find_smallest(minval : <b>out</b> 
+integer) <b>is</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>begin</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; minval:=integer'last;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> i <b>in</b> 1..n 
+<b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j 
+<b>in</b> 1..n <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> R_cov(i)=0 
+<b>and</b> C_cov(j)=0 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> 
+minval&gt;C(i,j) <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+minval:=C(i,j);</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+if</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+if</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end 
+loop</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end</b> find_smallest;</tt> </p>
+<p><tt>&nbsp; <b>begin</b></tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+find_smallest(minval);</tt> <br><tt>&nbsp;&nbsp;&nbsp; <b>for</b> i <b>in</b> 
+1..n <b>loop</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>for</b> j 
+<b>in</b> 1..n <b>loop</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> R_cov(i)=1 
+<b>then</b></tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C(i,j):=C(i,j)+minval;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<b>end if</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>if</b> 
+C_cov(j)=0 <b>then</b></tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+C(i,j):=C(i,j)-minval;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b> end if</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> 
+<br><tt>&nbsp;&nbsp;&nbsp; <b>end loop</b>;</tt> <br><tt>&nbsp;&nbsp;&nbsp; 
+step:=4;</tt> <br><tt>&nbsp; <b>end</b> stepsix;</tt> <br>&nbsp; <br>&nbsp; 
+<br><br></p>
+<center>
+<p><b><i><font face="Arial,Helvetica"><font size="+2">An Example Execution of 
+Munkres' Algorithm</font></font></i></b></p></center>
+<p><br></p>
+<center>
+<table cols="3" width="100%" cellspacing="5" cellpadding="5" border="0">
+  <tbody>
+  <tr>
+    <td>
+      <center><font face="Arial,Helvetica">Workers = { a, b, c}</font> <br><font face="Arial,Helvetica">Jobs = {p, q, r}</font> 
+      <p><font face="Arial,Helvetica">Cost of assigning job j to work i is</font> 
+      <br><img style="WIDTH: 167px; HEIGHT: 107px" alt="" src="munkres_files/image7_20.gif" nosave=""></p></center></td>
+    <td>
+      <center><img style="WIDTH: 206px; HEIGHT: 169px" alt="" src="munkres_files/image7_3.gif" nosave=""><br><font face="Arial,Helvetica">1. Step 0</font></center></td>
+    <td>
+      <center><img style="WIDTH: 214px; HEIGHT: 168px" alt="" src="munkres_files/image7_4.gif" nosave=""><br><font face="Arial,Helvetica">2. Step 1</font></center></td></tr>
+  <tr>
+    <td>
+      <center><img style="WIDTH: 204px; HEIGHT: 170px" alt="" src="munkres_files/image7_5.gif" nosave=""><br><font face="Arial,Helvetica">3. Step 2</font></center></td>
+    <td>
+      <center><img style="WIDTH: 201px; HEIGHT: 203px" alt="" src="munkres_files/image7_6.gif" nosave=""><br><font face="Arial,Helvetica">4. Step 3</font></center></td>
+    <td>
+      <center><img style="WIDTH: 204px; HEIGHT: 194px" alt="" src="munkres_files/image7_7.gif" nosave=""><br><font face="Arial,Helvetica">5. Step 4</font></center></td></tr>
+  <tr>
+    <td>
+      <center><img style="WIDTH: 207px; HEIGHT: 190px" alt="" src="munkres_files/image7_8.gif" nosave=""><br><font face="Arial,Helvetica">6. Step 6</font></center></td>
+    <td>
+      <center><img style="WIDTH: 218px; HEIGHT: 167px" alt="" src="munkres_files/image7_9.gif" nosave=""><br><font face="Arial,Helvetica">7. Step 4</font></center></td>
+    <td>
+      <center><img style="WIDTH: 220px; HEIGHT: 166px" alt="" src="munkres_files/image7_10.gif" nosave=""><br><font face="Arial,Helvetica">8. Step 5</font></center></td></tr>
+  <tr>
+    <td>
+      <center><img style="WIDTH: 203px; HEIGHT: 203px" alt="" src="munkres_files/image7_11.gif" nosave=""><br><font face="Arial,Helvetica">9. Step 3</font></center></td>
+    <td>
+      <center><img style="WIDTH: 211px; HEIGHT: 205px" alt="" src="munkres_files/image7_12.gif" nosave=""><br><font face="Arial,Helvetica">10. Step 4</font></center></td>
+    <td>
+      <center><img style="WIDTH: 196px; HEIGHT: 190px" alt="" src="munkres_files/image7_13.gif" nosave=""><br><font face="Arial,Helvetica">11. Step 6</font></center></td></tr>
+  <tr>
+    <td>
+      <center><img style="WIDTH: 220px; HEIGHT: 193px" alt="" src="munkres_files/image7_14.gif" nosave=""><br><font face="Arial,Helvetica">12. Step 4</font></center></td>
+    <td>
+      <center><img style="WIDTH: 217px; HEIGHT: 183px" alt="" src="munkres_files/image7_15.gif" nosave=""><br><font face="Arial,Helvetica">13. Step 6</font></center></td>
+    <td>
+      <center><img style="WIDTH: 226px; HEIGHT: 168px" alt="" src="munkres_files/image7_16.gif" nosave=""><br><font face="Arial,Helvetica">14. Step 4</font></center></td></tr>
+  <tr>
+    <td>
+      <center><img style="WIDTH: 225px; HEIGHT: 183px" alt="" src="munkres_files/image7_17.gif" nosave=""><br><font face="Arial,Helvetica">15. Step 5</font></center></td>
+    <td>
+      <center><img style="WIDTH: 219px; HEIGHT: 193px" alt="" src="munkres_files/image7_18.gif" nosave=""><br><font face="Arial,Helvetica">16. Step 3</font></center></td>
+    <td>
+      <center><img style="WIDTH: 227px; HEIGHT: 177px" alt="" src="munkres_files/image7_19.gif" nosave=""><br><font face="Arial,Helvetica">17. Done</font></center></td></tr></tbody></table></center>
+<p><font face="Arial,Helvetica"><font size="-1">This example illustrates the method 
+of implementing a step-algorithm.&nbsp; It also serves to demonstrate why we do 
+not attempt to implement every algorithm discussed in this course.</font></font> 
+:-)</p>
+<p style="TEXT-ALIGN: center"><span style="FONT-WEIGHT: bold">Answers to 
+Frequently Asked Questions</span><br></p>
+<ol>
+  <li>The algorthm will work even when the minimum values in two or more rows 
+  are in the same column. 
+  </li><li>The algorithm will work even when two or more of the rows contain the same 
+  values in the the same order. 
+  </li><li>The algorithm will work even when all the values are the same (although 
+  the result is not very interesting).<br>
+  </li><li>Munkres Assignment Algorithm is not exponential run time or intractable; 
+  it is of a low order polynomial run time. 
+  </li><li>Optimality is guaranteed in Munkres Assignment Algorithm.<br>
+  </li><li>Setting the cost matrix to C(i,j) = i*j&nbsp; makes a good testing matrix 
+  for this problem. 
+  </li><li>In this algorithm the range of indices is[1..n] rather than 
+  [0..n-1].&nbsp; Using the latter range makes the sample code less that helpful 
+  in your algorithm implementation. 
+  </li><li>Step 3 is an example of the greedy method.&nbsp; If the minimum values are 
+  all in different rows then their positions represent the minimal pairwise 
+  assignments. 
+  </li><li>Step 5 is an example of the Augmenting Path Algorithm (see Stable Marriage 
+  Problem). 
+  </li><li>Step 6 is an example of contraint relaxation.&nbsp; It is "giving up" on a 
+  particular cost and raising the constraint by the least amount possible. 
+  </li><li>If your implementation is jumping between Step 4 and Step 6 without 
+  entering Step 5, you probably have not properly dealt with recognizing that 
+  there are no uncovered zeros in Step 4. 
+  </li><li>In the matrix M 1=starred zero and 2=primed zero.&nbsp; So, if C[i,j] is a 
+  starred zero we would set M[i,j]=1.&nbsp; All other elements in M are set to 
+  zero 
+  </li><li>The Munkres assignment algorithm can be implemented as a sparse matrix, 
+  but you will need to ensure that the correct (optimal) assignment pairs are 
+  active in the sparse cost matrix C 
+  </li><li>Munkres Assignment can be applied to TSP, pattern matching, track 
+  initiation, data correlation, and (of course) any pairwise assignment 
+  application. 
+  </li><li>Munkres can be extended to rectangular arrays (i.e. more jobs than 
+  workers, or more workers than jobs) .<br>
+  </li><li>The best way to find a maximal assignment is to replace the values ci,j in 
+  the cost matrix with C[i,j] = bigval - ci,j.<span style="FONT-WEIGHT: bold"></span> 
+  </li><li><span style="FONT-WEIGHT: bold"></span>Original Reference:&nbsp; 
+  Algorithms for Assignment and Transportation Problems, James Munkres, Journal 
+  of the Society for Industrial and Applied Mathematics Volume 5, Number 1, 
+  March, 1957 
+  </li><li>Extension to Rectangular Arrays Ref:&nbsp; F. Burgeois and J.-C. Lasalle. 
+  An extension of the Munkres algorithm for the assignment problem to 
+  rectangular matrices. Communications of the ACM, 142302-806, 
+1971.<br></li></ol>
+</body></html>

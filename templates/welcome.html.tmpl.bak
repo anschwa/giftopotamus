@@ -1,0 +1,103 @@
+{{- define "welcome" -}}
+<!doctype html>
+<html lang="en">
+  <head>
+    {{ template "meta" }}
+    <title>{{ .Title }}</title>
+  </head>
+
+  <body class="py-2 px-4 max-w-screen-2xl mx-auto">
+    {{template "header" .}}
+
+    <main role="main">
+      <section class="px-8">
+        <div class="flex justify-end">
+          <a
+            href="/g/new"
+            class="py-1 px-4 text-base font-semibold rounded underline hover:bg-gray-100"
+          >
+            New Gift Exchange
+          </a>
+        </div>
+
+        <div class="mt-4 shadow overflow-auto border-b border-gray-200 rounded-md">
+          <table class="w-full whitespace-nowrap">
+            <thead class="bg-gray-100 border-b-2 border-gray-200">
+              <tr>
+                <th class="py-2 px-4 w-2/3 text-left text-sm uppercase tracking-wider font-semibold">Gift Exchange</th>
+                <th class="py-2 px-4 w-1/6 text-center text-sm uppercase tracking-wider font-semibold">Status</th>
+                <th class="py-2 px-4 w-1/6 text-center text-sm uppercase tracking-wider font-semibold">Created</th>
+                <th class="py-2 px-4 w-1/6 text-left text-sm uppercase tracking-wider font-semibold">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200">
+              <tr class="hover:bg-gray-50">
+                <td class="py-2 px-4 text-left text-lg">
+                  <span>Foo 2021</span>
+                </td>
+
+                <td class="py-2 px-4  text-center">
+                  <span class="py-1 px-2 text-sm rounded-full bg-green-100">
+                    In Progress
+                  </span>
+                </td>
+
+                <td class="py-2 px-4  text-center text-lg">
+                  <span>2021-10-10</span>
+                </td>
+
+                <td class="py-2 px-4  text-right text-lg">
+                  <a href="#" class="hover:underline">View</a>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-gray-50">
+                <td class="py-2 px-4  text-left text-lg">
+                  <span>Bar 2021</span>
+                </td>
+
+                <td class="py-2 px-4  text-center">
+                  <span class="py-1 px-2 text-sm rounded-full bg-gray-100">
+                    Complete
+                  </span>
+                </td>
+
+                <td class="py-2 px-4  text-center text-lg">
+                  <span>2021-05-05</span>
+                </td>
+
+                <td class="py-2 px-4  text-right text-lg">
+                  <a href="#" class="hover:underline">View</a>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-gray-50">
+                <td class="py-2 px-4  text-left text-lg">
+                  <span>Foo 2020</span>
+                </td>
+
+                <td class="py-2 px-4  text-center">
+                  <span class="py-1 px-2 text-sm rounded-full bg-gray-100">
+                    Complete
+                  </span>
+                </td>
+
+                <td class="py-2 px-4  text-center text-lg">
+                  <span>2020-01-01</span>
+                </td>
+
+                <td class="py-2 px-4  text-right text-lg">
+                  <a href="#" class="hover:underline">View</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    {{template "footer"}}
+  </body>
+</html>
+{{- end -}}

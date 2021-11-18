@@ -1,0 +1,137 @@
+{{- define "results" -}}
+<!doctype html>
+<html lang="en">
+  <head>
+    {{ template "meta" }}
+    <title>{{ .Title }}</title>
+  </head>
+
+  <body class="py-2 px-4 max-w-screen-2xl mx-auto">
+    {{template "header" .}}
+
+    <main role="main">
+      <section class="md:px-8">
+        <a
+          href="/"
+          class="py-2 px-4 text-base font-semibold rounded hover:bg-gray-100"
+        >
+          <svg class="inline-block w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+          <span class="underline">Back</span>
+        </a>
+
+        <div class="my-8 flex flex-wrap gap-6 justify-center">
+          <a
+            href="/download"
+            download="gift-exchange-results.csv"
+            class="py-2 px-6 text-base font-semibold rounded border border-black hover:bg-gray-100"
+          >
+            Download Results
+          </a>
+
+          {{- if ne .Username "" -}}
+          <button
+            type="button"
+            class="py-2 px-6 text-base text-white font-semibold rounded bg-purple-500 hover:bg-purple-700 disabled:opacity-50"
+            onclick="this.setAttribute('disabled', true); g('send-mail-form').classList.remove('hidden');"
+          >
+            Email Gift Exchange Results
+          </button>
+          {{- end -}}
+        </div>
+
+        {{- if ne .Username "" -}}
+        <form
+          id="send-mail-form"
+          method="post"
+          action="/sendmail"
+          class="hidden my-4 pt-4 px-4 flex flex-col items-center justify-around gap-6"
+        >
+          <label class="flex items-center">
+            <input
+              class="p-2"
+              name="confirm"
+              type="checkbox"
+              onclick="g('send-mail-btn').toggleAttribute('disabled');"
+            />
+            <span class="ml-4 select-none">
+              Please email everyone in the gift exchange who they have been assigned to.
+            </span>
+          </label>
+
+          <button
+            id="send-mail-btn"
+            type="submit"
+            disabled
+            class="py-2 px-6 text-base text-white font-semibold rounded bg-purple-500 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Send
+          </button>
+
+          <input name="token" type="hidden" value="{{.Token}}" />
+        </form>
+        {{- end -}}
+
+        <button
+          type="button"
+          title="With great power comes great responsibility…"
+          class="py-1 px-4 text-base font-semibold rounded underline hover:bg-gray-100"
+          onclick="g('results').classList.toggle('hidden');"
+        >
+          See Results
+        </button>
+
+        <div id="results" class="my-4 hidden">
+          <h1 class="text-2xl font-semibold">Results</h1>
+
+          <div class="my-8 shadow overflow-auto border-b border-gray-200 rounded-md">
+            <table class="table-auto w-full">
+              <thead class="hidden sm:table-header-group bg-gray-100 border-b-2 border-gray-200">
+                <tr>
+                  <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Name</th>
+                  <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Email</th>
+                  <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Restrictions</th>
+                  <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Previous</th>
+                  <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Has</th>
+                </tr>
+              </thead>
+
+              <tbody class="bg-white divide-y divide-gray-200">
+                {{ range .TableRows }}
+                <tr class="even:bg-gray-50 divide-y divide-gray-200">
+                  <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                    <span class="sm:hidden text-sm uppercase tracking-wider">Name</span>
+                    <span>{{.Name}}</span>
+                  </td>
+
+                  <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                    <span class="sm:hidden text-sm uppercase tracking-wider">Email</span>
+                    <span>{{.Email}}</span>
+                  </td>
+
+                  <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                    <span class="sm:hidden text-sm uppercase tracking-wider">Restrictions</span>
+                    <span>{{.Restrictions}}</span>
+                  </td>
+
+                  <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                    <span class="sm:hidden text-sm uppercase tracking-wider">Previous</span>
+                    <span>{{.Previous}}</span>
+                  </td>
+
+                  <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                    <span class="sm:hidden text-sm uppercase tracking-wider">Has</span>
+                    <span class="font-semibold">{{.Has}}</span>
+                  </td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    {{template "footer"}}
+  </body>
+</html>
+{{- end -}}

@@ -1,0 +1,297 @@
+{{- define "giftex" -}}
+<!doctype html>
+<html lang="en">
+  <head>
+    {{ template "meta" }}
+    <title>{{ .Title }}</title>
+  </head>
+
+  <body class="py-2 px-4 max-w-screen-2xl mx-auto">
+    {{template "header" .}}
+
+    <main role="main">
+      <section class="md:px-8">
+        <h1 class="text-2xl font-semibold">Create your gift exchange!</h1>
+
+        <div class="flex justify-end">
+          <form
+            method="post"
+            action="/import"
+            enctype="multipart/form-data"
+          >
+            <label class="block">
+              <span>Import from CSV</span>
+              <input
+                name="csv"
+                type="file"
+                accept=".csv"
+                class="text-sm block"
+                onchange="form.submit();"
+              />
+
+              <input name="token" type="hidden" value="{{.Token}}" />
+            </label>
+          </form>
+        </div>
+
+        <div class="mt-4 shadow overflow-auto border-b border-gray-200 rounded-md">
+          <table
+            id="participant-table"
+            class="table-auto w-full"
+          >
+            <thead class="hidden sm:table-header-group bg-gray-100 border-b-2 border-gray-200">
+              <tr>
+                <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Name</th>
+                <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Email</th>
+                <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Restrictions</th>
+                <th class="py-2 px-4 text-left text-sm uppercase tracking-wider font-semibold">Previous</th>
+                <th class="py-2 px-4 text-right text-sm uppercase tracking-wider font-semibold">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody class="bg-white divide-y divide-gray-200">
+              {{ range .TableRows }}
+              <tr class="even:bg-gray-50 divide-y divide-gray-200">
+                <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                  <span class="sm:hidden text-sm uppercase tracking-wider">Name</span>
+                  <span class="cell-value">{{.Name}}</span>
+                </td>
+
+                <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                  <span class="sm:hidden text-sm uppercase tracking-wider">Email</span>
+                  <span class="cell-value">{{.Email}}</span>
+                </td>
+
+                <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                  <span class="sm:hidden text-sm uppercase tracking-wider">Restrictions</span>
+                  <span class="cell-value">{{.Restrictions}}</span>
+                </td>
+
+                <td class="flex justify-between sm:table-cell py-2 px-4 text-left text-lg">
+                  <span class="sm:hidden text-sm uppercase tracking-wider">Previous</span>
+                  <span class="cell-value">{{.Previous}}</span>
+                </td>
+
+                <td class="flex justify-between sm:table-cell py-2 px-4 text-right text-lg">
+                  <span class="sm:hidden text-sm uppercase tracking-wider">Actions</span>
+
+                  <div>
+                    <button
+                      type="button"
+                      class="hover:underline"
+                      onclick="editRow(event);"
+                    >
+                      Edit
+                    </button>,&nbsp;
+
+                    <form class="inline-block" method="post" action="/edit">
+                      <input name="action" type="hidden" value="remove" />
+                      <input name="name" type="hidden" value="{{.Name}}" />
+                      <input name="token" type="hidden" value="{{$.Token}}" />
+                      <button type="submit" class="hover:underline">Remove</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {{end}}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="my-4">
+          <button
+            type="submit"
+            class="py-1 px-4 text-base font-semibold rounded underline hover:bg-gray-100"
+            onclick="newParticipant();"
+          >
+            New Participant
+          </button>
+        </div>
+
+        <form
+          id="participant-form"
+          class="hidden my-4 pt-4 px-4 shadow border rounded mx-auto max-w-screen-lg"
+          method="post"
+          action="/edit"
+        >
+          <div class="mb-4 text-xl font-semibold">New Participant</div>
+
+          <div class="my-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <label class="block">
+              <span>Name <span class="text-red-700">*</span></span>
+              <input
+                class="block w-full"
+                type="text"
+                name="name"
+                value=""
+                onblur="validateEditForm(event);"
+                placeholder="Participant's name"
+              />
+              <p class="mt-1 text-sm leading-tight italic">
+                Required
+              </p>
+            </label>
+
+            <label class="block">
+              <span>Email</span>
+              <input
+                class="block w-full"
+                type="text"
+                name="email"
+                value=""
+                placeholder="participant@example.com"
+              />
+            </label>
+
+            <label class="block col-span-1 md:col-span-2">
+              <span>Don't match this person with…</span>
+              <input
+                class="block w-full"
+                type="text"
+                name="restrictions"
+                value=""
+                placeholder="Alice Smith, Bob B, Wendy"
+              />
+              <p class="mt-1 text-sm leading-tight italic">
+                Each participant must be separated by a single comma
+                and match the spelling of their name exactly as it
+                appears in the table.
+              </p>
+            </label>
+          </div>
+
+          <div class="mt-8 mb-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <button
+              type="button"
+              class="py-1 px-4 text-base font-semibold rounded underline hover:bg-gray-100"
+              onclick="g('participant-form').classList.add('hidden');"
+            >
+              Cancel
+            </button>
+
+            <button
+              id="participant-form-btn"
+              type="submit"
+              disabled
+              class="py-2 px-6 text-base font-semibold rounded bg-purple-500 hover:bg-purple-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Add Participant
+            </button>
+          </div>
+
+          <input id="participant-form-index" name="index" type="hidden" value="" />
+          <input name="action" type="hidden" value="edit" />
+          <input name="token" type="hidden" value="{{.Token}}" />
+        </form>
+
+        <hr />
+        <form
+          class="my-4 pt-4 px-4 flex flex-wrap items-center justify-around gap-6"
+          method="post"
+          action="/create"
+        >
+          <label class="flex items-center">
+            <input
+              class="p-2"
+              name="confirm"
+              type="checkbox"
+              onclick="g('create-giftex-btn').toggleAttribute('disabled');"
+            />
+            <span class="ml-4 select-none">
+              I have reviewed the table and double-checked all entries
+              for mistakes and typos.
+            </span>
+          </label>
+
+          <input id="participant-json" name="participants" type="hidden" value="" />
+          <input name="token" type="hidden" value="{{.Token}}" />
+
+          <button
+            id="create-giftex-btn"
+            name="submit"
+            type="submit"
+            onclick="g('participant-json').setAttribute('value', tableToJson());"
+            disabled
+            class="py-2 px-6 text-base text-white font-semibold rounded bg-purple-500 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Create Gift Exchange
+          </button>
+        </form>
+      </section>
+    </main>
+
+    {{template "footer"}}
+
+    <script>
+    const newParticipant = () => {
+      const btn = g('participant-form-btn');
+      btn.innerHTML = 'Add Participant';
+
+      // Reset form
+      const form = g('participant-form');
+      form.elements.name.value = '';
+      form.elements.email.value = '';
+      form.elements.restrictions.value = '';
+
+      // Show form
+      form.classList.remove('hidden');
+    };
+
+    const editRow = (event) => {
+      // Find row by traversing back up the DOM (button -> span -> td -> tr)
+      const row = event.target.parentElement.parentElement.parentElement;
+
+      console.log(event);
+      console.log(row);
+
+      // Update form
+      const form = g('participant-form');
+
+      const cells = row.getElementsByTagName('td');
+      form.elements.name.value = cells[0].getElementsByClassName('cell-value')[0].innerText;
+      form.elements.email.value = cells[1].getElementsByClassName('cell-value')[0].innerText;
+      form.elements.restrictions.value = cells[2].getElementsByClassName('cell-value')[0].innerText;
+      form.elements.index.value = row.rowIndex - 1; // subtract header row
+
+      const btn = g('participant-form-btn');
+      btn.innerHTML = 'Update Participant';
+      btn.removeAttribute('disabled');
+
+      // Show form
+      form.classList.remove('hidden');
+    };
+
+    const validateEditForm = (event) => {
+      const el = event.target;
+      const btn = g('participant-form-btn');
+
+      if (el.value && el.value.length > 0) {
+        btn.removeAttribute('disabled');
+        return;
+      }
+
+      btn.setAttribute('disabled', true);
+    };
+
+    const tableToJson = () => {
+      const table = g('participant-table');
+
+      const results = [];
+      const headers = ['name', 'email', 'restrictions', 'previous'];
+      for (let i = 1; i < table.rows.length; i++) {
+        const row = {};
+
+        for (let j = 0; j < headers.length; j++) {
+          const c = table.rows[i].cells[j].getElementsByClassName('cell-value')[0];
+          row[headers[j]] = c.innerText.toLowerCase();
+        }
+
+        results.push(row);
+      }
+
+      return JSON.stringify(results);
+    };
+    </script>
+  </body>
+</html>
+{{- end -}}

@@ -1,0 +1,20 @@
+* Giftopotamus
+Giftopotamus is a web app for creating gift exchanges.
+
+You can add participants directly from the website, or import a CSV:
+| name | email           | restrictions | previous | participating | has |
+|------+-----------------+--------------+----------+---------------+-----|
+| foo  | foo@example.com | quux         | bar, baz | yes           |     |
+
+[[file:screenshot.png]]
+
+The [[file:giftex][giftex]] package provides an implementation of the Kuhn-Munkres
+assignment algorithm for creating gift exchanges.
+
+Kuhn-Munkres, or the "[[https://en.wikipedia.org/wiki/Hungarian_algorithm][Hungarian Algorithm]]" allows us to easily
+determine whether an assignment exists that can satisfy all
+constraints of the given gift exchange.
+
+Once the set of constraints are verified, a final assignment is made
+at random because a completely deterministic gift exchange would spoil
+the fun.
