@@ -114,7 +114,7 @@ func CreateGiftExchange(sm *middleware.SessionManager) http.Handler {
 	})
 }
 
-func tableRowsToGiftExchangeDB(rows []GiftexTableRow) (*giftex.GiftExchangeDB, error) {
+func tableRowsToCSV(rows []GiftexTableRow) ([]byte, error) {
 	// Construct CSV from rows
 	var buf bytes.Buffer
 	w := csv.NewWriter(&buf)
@@ -129,12 +129,23 @@ func tableRowsToGiftExchangeDB(rows []GiftexTableRow) (*giftex.GiftExchangeDB, e
 			"",    // The Has column is required for writing out the results later
 		})
 	}
+
 	w.Flush()
 	if err := w.Error(); err != nil {
 		return nil, fmt.Errorf("Error converting []GiftexTableRow to CSV: %w", err)
 	}
 
-	return giftex.ReadCSV(&buf)
+	return buf.Bytes(), nil
+}
+
+func tableRowsToGiftExchangeDB(rows []GiftexTableRow) (*giftex.GiftExchangeDB, error) {
+	rowsCSV, err := tableRowsToCSV(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	buf := bytes.NewBuffer(rowsCSV)
+	return giftex.ReadCSV(buf)
 }
 
 func giftExchangeToTableRows(db *giftex.GiftExchangeDB, ge *giftex.GiftExchange) (resultsTable []GiftexTableRow, resultsCSV []byte, err error) {

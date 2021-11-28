@@ -98,14 +98,24 @@
           </table>
         </div>
 
-        <div class="my-4">
+        <div class="my-4 flex justify-between">
           <button
+            id="new-participant-btn"
             type="submit"
-            class="py-1 px-4 text-base font-semibold rounded underline hover:bg-gray-100"
+            class="py-1 px-4 text-base font-semibold rounded border border-black hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
             onclick="newParticipant();"
           >
             New Participant
           </button>
+
+          <a
+            href="/download"
+            title="You can import a copy of this table to edit later"
+            download="gift-exchange-results.csv"
+            class="py-1 px-4 text-base font-semibold rounded underline hover:bg-gray-100"
+          >
+            Export to CSV
+          </a>
         </div>
 
         <form
@@ -164,7 +174,7 @@
             <button
               type="button"
               class="py-1 px-4 text-base font-semibold rounded underline hover:bg-gray-100"
-              onclick="g('participant-form').classList.add('hidden');"
+              onclick="cancelAddParticipant();"
             >
               Cancel
             </button>
@@ -224,8 +234,11 @@
 
     <script>
     const newParticipant = () => {
-      const btn = g('participant-form-btn');
-      btn.innerHTML = 'Add Participant';
+      const btn = g('new-participant-btn');
+      btn.setAttribute('disabled', true);
+
+      const addBtn = g('participant-form-btn');
+      addBtn.innerHTML = 'Add Participant';
 
       // Reset form
       const form = g('participant-form');
@@ -235,6 +248,11 @@
 
       // Show form
       form.classList.remove('hidden');
+    };
+
+    const cancelAddParticipant = () => {
+      g('new-participant-btn').removeAttribute('disabled');
+      g('participant-form').classList.add('hidden');
     };
 
     const editRow = (event) => {

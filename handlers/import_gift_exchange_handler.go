@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	"encoding/csv"
 	"fmt"
 	"io"
 	"net/http"
 	"sort"
 	"strings"
 
-	"github.com/anschwa/giftopotamus/giftex"
 	"github.com/anschwa/giftopotamus/logger"
 	"github.com/anschwa/giftopotamus/middleware"
 )
@@ -77,38 +77,61 @@ type GiftexTableRow struct {
 	Has          string
 }
 
+// csvToRows reads all rows in a given CSV for displaying as a table.
+// We want to preserve all the data given by the user without making
+// assumptions about the validity. For example, giftex.ReadCSV
+// incorrectly ignore column data that include participants who have
+// not been entered into the table yet.
 func csvToRows(r io.Reader) ([]GiftexTableRow, error) {
-	db, err := giftex.ReadCSV(r)
+	csvReader := csv.NewReader(r)
+	csvReader.FieldsPerRecord = -1 // Allow empty columns
+	csvReader.Comma = ','
+
+	records, err := csvReader.ReadAll()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error reading csv: %w", err)
 	}
 
-	rows := make([]GiftexTableRow, 0, len(db.Participants))
-	for _, p := range db.Participants {
-		restrictions := make([]string, 0, len(p.Restrictions))
-		for _, pid := range p.Restrictions {
-			restrictions = append(restrictions, db.Participants[pid].Name)
-		}
-
-		previous := make([]string, 0, len(p.Previous))
-		for _, pid := range p.Previous {
-			previous = append(previous, db.Participants[pid].Name)
-		}
-
-		row := GiftexTableRow{
-			Name:         p.Name,
-			Email:        p.Email,
-			Restrictions: strings.Join(restrictions, ", "),
-			Previous:     strings.Join(previous, ", "),
-		}
-
-		rows = append(rows, row)
+	numRecords := len(records)
+	if numRecords < 2 {
+		return nil, fmt.Errorf("csv must include headers and at least one entry")
 	}
 
-	// Sort by name
-	sort.Slice(rows, func(i, j int) bool {
-		return rows[i].Name < rows[j].Name
+	trimLower := func(s string) string { return strings.TrimSpace(strings.ToLower(s)) }
+
+	// The first record contains the column headers
+	cols := make(map[string]int, len(records[0]))
+	for i, v := range records[0] {
+		cols[trimLower(v)] = i
+	}
+
+	tableRows := make([]GiftexTableRow, 0, numRecords)
+	for i := 0; i < numRecords; i++ {
+		row := records[i]
+
+		// Skip non-participants
+		if participating := trimLower(row[cols["participating"]]) == "yes"; !participating {
+			continue
+		}
+
+		getCol := func(key string) string {
+			return strings.TrimSpace(row[cols[key]])
+		}
+
+		tr := GiftexTableRow{
+			Name:         getCol("name"),
+			Email:        getCol("email"),
+			Restrictions: getCol("restrictions"),
+			Previous:     getCol("previous"),
+		}
+
+		tableRows = append(tableRows, tr)
+	}
+
+	// Sort rows by name
+	sort.Slice(tableRows, func(i, j int) bool {
+		return tableRows[i].Name < tableRows[j].Name
 	})
 
-	return rows, nil
+	return tableRows, nil
 }

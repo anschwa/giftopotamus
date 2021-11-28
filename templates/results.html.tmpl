@@ -23,7 +23,7 @@
           <a
             href="/download"
             download="gift-exchange-results.csv"
-            class="py-2 px-6 text-base font-semibold rounded border border-black hover:bg-gray-100"
+            class="py-2 px-6 text-base text-white font-semibold rounded bg-purple-500 hover:bg-purple-700"
           >
             Download Results
           </a>
@@ -72,10 +72,11 @@
         {{- end -}}
 
         <button
+          id="results-btn"
           type="button"
           title="With great power comes great responsibility…"
-          class="py-1 px-4 text-base font-semibold rounded underline hover:bg-gray-100"
-          onclick="g('results').classList.toggle('hidden');"
+          class="py-1 px-4 text-base font-semibold rounded border border-black hover:bg-gray-100"
+          onclick="toggleResults();"
         >
           See Results
         </button>
@@ -132,6 +133,17 @@
     </main>
 
     {{template "footer"}}
+
+    <script>
+    const toggleResults = () => {
+      const btn = g('results-btn');
+
+      g('results').classList.toggle('hidden');
+      btn.innerText = btn.innerText === 'See Results'
+                    ? 'Hide Results'
+                    : 'See Results';
+    };
+    </script>
   </body>
 </html>
 {{- end -}}

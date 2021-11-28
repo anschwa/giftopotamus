@@ -111,6 +111,54 @@ func (db *GiftExchangeDB) GetParticipant(id Pid) (Participant, error) {
 	return p, nil
 }
 
+func ReadCSVFromFile(path string) (*GiftExchangeDB, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("Error reading csv: %w", err)
+	}
+	defer f.Close()
+
+	return ReadCSV(f)
+}
+
+// ReadCSV processes a CSV representation of prior gift exchange data
+// and preserves the original records for writing out as a new CSV later.
+//
+// The following columns are required: name, email, restrictions, previous, participating, has
+func ReadCSV(r io.Reader) (*GiftExchangeDB, error) {
+	csvReader := csv.NewReader(r)
+	csvReader.FieldsPerRecord = -1 // Allow empty columns
+	csvReader.Comma = ','
+
+	records, err := csvReader.ReadAll()
+	if err != nil {
+		return nil, fmt.Errorf("Error reading csv: %w", err)
+	}
+
+	if len(records) < 2 {
+		return nil, ErrInvalidCSV
+	}
+
+	// The first record contains the column headers
+	cols := make(map[string]int, len(records[0]))
+	for i, v := range records[0] {
+		cols[trimLower(v)] = i
+	}
+
+	maxSize := len(records) - 1 // Skip header row
+
+	db := &GiftExchangeDB{
+		cols:         cols,
+		headers:      records[0],
+		records:      records[1:],
+		Participants: make(ParticipantMap, maxSize),
+		index:        make(map[Pid]int, maxSize),
+	}
+
+	db.loadRecords()
+	return db, nil
+}
+
 func (db *GiftExchangeDB) loadRecords() {
 	numRecords := len(db.records)
 	nameMap := make(map[string]Pid, numRecords)
@@ -164,54 +212,6 @@ func (db *GiftExchangeDB) loadRecords() {
 	}
 }
 
-// ReadCSV processes a CSV representation of prior gift exchange data
-// and preserves the original records for writing out as a new CSV later.
-//
-// The following columns are required: name, email, restrictions, previous, participating, has
-func ReadCSV(r io.Reader) (*GiftExchangeDB, error) {
-	csvReader := csv.NewReader(r)
-	csvReader.FieldsPerRecord = -1 // Allow empty columns
-	csvReader.Comma = ','
-
-	records, err := csvReader.ReadAll()
-	if err != nil {
-		return nil, fmt.Errorf("Error reading csv: %w", err)
-	}
-
-	if len(records) < 2 {
-		return nil, ErrInvalidCSV
-	}
-
-	// The first record contains the column headers
-	cols := make(map[string]int, len(records[0]))
-	for i, v := range records[0] {
-		cols[trimLower(v)] = i
-	}
-
-	maxSize := len(records) - 1 // Skip header row
-
-	db := &GiftExchangeDB{
-		cols:         cols,
-		headers:      records[0],
-		records:      records[1:],
-		Participants: make(ParticipantMap, maxSize),
-		index:        make(map[Pid]int, maxSize),
-	}
-
-	db.loadRecords()
-	return db, nil
-}
-
-func ReadCSVFromFile(path string) (*GiftExchangeDB, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, fmt.Errorf("Error reading csv: %w", err)
-	}
-	defer f.Close()
-
-	return ReadCSV(f)
-}
-
 // WriteCSV produces a new CSV with the results of a completed gift
 // exchange while also preserving the original CSV's data. The rows
 // are sorted by name.
@@ -262,8 +262,8 @@ func (db *GiftExchangeDB) WriteCSV(w io.Writer, results Assignment) error {
 
 	b.Flush()
 	return b.Error()
-}
 
+}
 func trimLower(s string) string {
 	return strings.TrimSpace(strings.ToLower(s))
 }

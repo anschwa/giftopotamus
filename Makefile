@@ -15,6 +15,10 @@ help: ## Display this help section
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z0-9_-]+:.*?## / {printf "  %-38s %s\n", $$1, $$2}' ${MAKEFILE_LIST}
 .DEFAULT_GOAL := help
 
+.PHONY: test
+test: ## Run all tests
+	go test -cover ./...
+
 .PHONY: deploy
 deploy: ## Deploy production build to Heroku
 	$(HEROKU) config:set APP_ENV="production"

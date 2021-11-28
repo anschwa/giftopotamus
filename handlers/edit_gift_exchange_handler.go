@@ -119,8 +119,18 @@ func EditGiftExchange(sm *middleware.SessionManager) http.Handler {
 			return tableRows[i].Name < tableRows[j].Name
 		})
 
+		// Build CSV representation of table data
+		tableCSV, err := tableRowsToCSV(tableRows)
+		if err != nil {
+			errorPage(w, http.StatusInternalServerError)
+			return
+		}
+
 		// Update the session with new table data
 		sess.Set(middleware.SessionTableRows, tableRows)
+		sess.Set(middleware.SessionResultsCSV, tableCSV)
+
 		http.Redirect(w, r, "/", http.StatusFound)
+
 	})
 }
